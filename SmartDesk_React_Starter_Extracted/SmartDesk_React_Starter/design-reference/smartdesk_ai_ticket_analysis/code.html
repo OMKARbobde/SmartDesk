@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_dashboard" name="shell-type"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config={darkMode:"class",theme:{extend:{colors:{"error-container":"#93000a","primary":"#adc6ff","surface-variant":"#31353e","inverse-primary":"#005ac2","surface-bright":"#353942","on-surface-variant":"#c2c6d6","on-primary-container":"#00285d","primary-fixed":"#d8e2ff","tertiary-fixed":"#6ffbbe","secondary-container":"#571bc1","tertiary":"#4edea3","on-primary-fixed-variant":"#004395","on-surface":"#dfe2ee","surface":"#0f131c","surface-container-low":"#181c24","on-tertiary-container":"#00311f","secondary-fixed-dim":"#d0bcff","on-secondary-fixed":"#23005c","secondary-fixed":"#e9ddff","tertiary-fixed-dim":"#4edea3","inverse-surface":"#dfe2ee","surface-container":"#1c2028","inverse-on-surface":"#2c3039","primary-fixed-dim":"#adc6ff","surface-tint":"#adc6ff","on-primary-fixed":"#001a42","on-primary":"#002e6a","surface-container-lowest":"#0a0e16","surface-container-highest":"#31353e","error":"#ffb4ab","on-secondary":"#3c0091","tertiary-container":"#00a572","on-tertiary":"#003824","on-secondary-fixed-variant":"#5516be","on-tertiary-fixed-variant":"#005236","primary-container":"#4d8eff","on-error":"#690005","on-background":"#dfe2ee","on-error-container":"#ffdad6","surface-container-high":"#262a33","secondary":"#d0bcff","background":"#0f131c","outline-variant":"#424754","surface-dim":"#0f131c","on-secondary-container":"#c4abff","on-tertiary-fixed":"#002113","outline":"#8c909f"},borderRadius:{"DEFAULT":"0.125rem","lg":"0.25rem","xl":"0.5rem","full":"0.75rem"},spacing:{"gutter-dense":"0.5rem","gutter":"1rem","space-xl":"1.5rem","margin":"1.5rem","space-2xl":"2rem","space-sm":"0.5rem","space-lg":"1rem","space-2xs":"0.125rem","space-xs":"0.25rem","margin-compact":"1rem","space-md":"0.75rem"},fontFamily:{"headline-lg-mobile":["Inter"],"label-sm":["Inter"],"display-lg":["Inter"],"body-lg":["Inter"],"metric-num":["Inter"],"headline-sm":["Inter"],"label-md":["Inter"],"body-sm":["Inter"],"headline-lg":["Inter"],"headline-md":["Inter"],"body-md":["Inter"]},fontSize:{"headline-lg-mobile":["22px",{lineHeight:"28px",letterSpacing:"-0.015em",fontWeight:"600"}],"label-sm":["11px",{lineHeight:"14px",letterSpacing:"0.02em",fontWeight:"500"}],"display-lg":["36px",{lineHeight:"44px",letterSpacing:"-0.025em",fontWeight:"600"}],"body-lg":["15px",{lineHeight:"22px",letterSpacing:"-0.005em",fontWeight:"400"}],"metric-num":["24px",{lineHeight:"28px",letterSpacing:"-0.02em",fontWeight:"600"}],"headline-sm":["16px",{lineHeight:"24px",letterSpacing:"-0.01em",fontWeight:"600"}],"label-md":["13px",{lineHeight:"16px",letterSpacing:"0em",fontWeight:"500"}],"body-sm":["12px",{lineHeight:"16px",letterSpacing:"0em",fontWeight:"400"}],"headline-lg":["28px",{lineHeight:"36px",letterSpacing:"-0.02em",fontWeight:"600"}],"headline-md":["20px",{lineHeight:"28px",letterSpacing:"-0.015em",fontWeight:"600"}],"body-md":["13px",{lineHeight:"18px",letterSpacing:"0em",fontWeight:"400"}]}}}};</script></head><body class="bg-surface font-body-md text-on-surface antialiased min-h-screen"><aside class="fixed left-0 top-0 h-screen w-64 bg-surface-container-low z-50 flex flex-col justify-between"><div class="flex flex-col"><div class="h-16 px-space-lg flex items-center justify-between"><div class="flex items-center gap-space-sm"><img alt="SmartDesk Logo" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1XLtcxM90aaK0PSI9Fgg_5xE8bF7jzHVI5BeTUn6KvqUYASS9xg8adkaUpuW3qtnGVe2cpkB059mKVNTijg6xekfHTtNmcpc84bzMLmEb4oKuNZDHa2lUmZuGNNPReZ3kw8HrM0OjrirMbOJbLG5gA0ZfYbVXyCztXIgkSOi6X5jlxemoaLNhEd-pZVtIVZCUYLzY6nkUct9PUA4XuadphVehvEZUcU-EpBNexF47tUig"/><span class="font-headline-sm text-headline-sm text-on-surface tracking-tight">SmartDesk</span></div><button aria-label="Collapse sidebar" class="text-on-surface-variant hover:text-on-surface p-space-xs rounded transition-colors" type="button"><span class="material-symbols-outlined text-[20px]">dock_to_left</span></button></div><div class="px-space-md py-space-xs"><span class="font-label-sm text-label-sm text-outline uppercase tracking-wider px-space-sm">Operations</span></div><nav class="flex flex-col gap-space-2xs px-space-sm" data-active-classes="bg-surface-container-high text-primary font-label-md"><a class="flex items-center justify-between px-space-md py-space-sm rounded text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-all" data-path="dashboard" href="#"><div class="flex items-center gap-space-md"><span class="material-symbols-outlined text-[18px]">dashboard</span><span class="font-label-md text-label-md">Dashboard</span></div></a><a class="flex items-center justify-between px-space-md py-space-sm rounded text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-all" data-path="tickets" href="#"><div class="flex items-center gap-space-md"><span class="material-symbols-outlined text-[18px]">confirmation_number</span><span class="font-label-md text-label-md">Tickets</span></div><span class="bg-surface-container-highest text-on-surface font-label-sm text-label-sm px-space-xs py-space-2xs rounded">14</span></a><a aria-current="page" class="flex items-center justify-between px-space-md py-space-sm rounded transition-all bg-surface-container-high text-primary font-label-md" data-path="ai-analysis" href="#"><div class="flex items-center gap-space-md"><span class="material-symbols-outlined text-[18px] text-secondary">auto_awesome</span><span class="font-label-md text-label-md">AI Analysis</span></div><span class="bg-secondary-container text-on-secondary-container font-label-sm text-label-sm px-space-xs py-space-2xs rounded font-bold">AI</span></a><a class="flex items-center justify-between px-space-md py-space-sm rounded text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-all" data-path="assignments" href="#"><div class="flex items-center gap-space-md"><span class="material-symbols-outlined text-[18px]">assignment_ind</span><span class="font-label-md text-label-md">Assignments</span></div></a><div class="pt-space-md pb-space-xs"><span class="font-label-sm text-label-sm text-outline uppercase tracking-wider px-space-sm">Organization</span></div><a class="flex items-center justify-between px-space-md py-space-sm rounded text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-all" data-path="employees" href="#"><div class="flex items-center gap-space-md"><span class="material-symbols-outlined text-[18px]">group</span><span class="font-label-md text-label-md">Employees</span></div></a><a class="flex items-center justify-between px-space-md py-space-sm rounded text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-all" data-path="departments" href="#"><div class="flex items-center gap-space-md"><span class="material-symbols-outlined text-[18px]">domain</span><span class="font-label-md text-label-md">Departments</span></div></a><a class="flex items-center justify-between px-space-md py-space-sm rounded text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-all" data-path="reports" href="#"><div class="flex items-center gap-space-md"><span class="material-symbols-outlined text-[18px]">bar_chart</span><span class="font-label-md text-label-md">Reports</span></div></a><a class="flex items-center justify-between px-space-md py-space-sm rounded text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-all" data-path="settings" href="#"><div class="flex items-center gap-space-md"><span class="material-symbols-outlined text-[18px]">settings</span><span class="font-label-md text-label-md">Settings</span></div></a></nav></div><div class="p-space-sm m-space-sm bg-surface-container rounded-lg"><div class="flex items-center justify-between p-space-xs"><div class="flex items-center gap-space-sm"><div class="relative"><img alt="Profile" class="w-8 h-8 rounded-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCpBZnGEbLP-xA0Yn-NLL2e2MIBEcO-XdI5EdmXpybfUB-7WDj2OFoyNUekphfX0POd2H6Q4yKbnnfNraTr_c0Y-FVGM7s-Sdb6eDGrzt2fEct87F7RvpF9cvr-hj-5-WCpQs5giDW_z92bVKmaKyFmwOUrVytJqxWoEoYlM4svVMgJsUjuE545C9OvCZUwurCbSvIAzUKVGSQ9iaJQfQ84c07BG5IYZiqwtqbmZJZ-"/><span class="absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full bg-tertiary ring-2 ring-surface-container"></span></div><div class="flex flex-col min-w-0"><span class="font-label-md text-label-md text-on-surface font-semibold truncate">Sarah Jenkins</span><span class="font-body-sm text-body-sm text-on-surface-variant truncate">Director of IT Ops</span></div></div><button aria-label="User actions" class="text-on-surface-variant hover:text-on-surface p-space-2xs" type="button"><span class="material-symbols-outlined text-[18px]">more_vert</span></button></div></div></aside><div class="pl-64"><header class="fixed top-0 left-64 right-0 h-16 bg-surface/85 backdrop-blur-xl z-40 flex items-center justify-between px-space-xl"><div class="flex items-center gap-space-lg"><div class="flex items-center gap-space-xs text-on-surface-variant font-body-sm text-body-sm"><span class="hover:text-on-surface cursor-pointer">Platform</span><span class="material-symbols-outlined text-[14px]">chevron_right</span><span class="text-on-surface font-medium">Service Management</span></div><div class="relative flex items-center w-80"><span class="material-symbols-outlined absolute left-space-md text-[18px] text-outline pointer-events-none">search</span><input class="w-full bg-surface-container-low text-on-surface placeholder:text-outline font-body-sm text-body-sm pl-9 pr-12 py-space-xs rounded focus:outline-none focus:ring-1 focus:ring-primary transition-all" placeholder="Search incidents, services, records..." type="text"/><div class="absolute right-space-sm flex items-center gap-space-2xs bg-surface-container-high px-space-xs py-space-2xs rounded font-label-sm text-label-sm text-on-surface-variant pointer-events-none"><span class="text-[10px]">⌘</span><span>K</span></div></div></div><div class="flex items-center gap-space-md"><button aria-label="Notifications" class="relative p-space-xs text-on-surface-variant hover:text-on-surface rounded hover:bg-surface-container transition-colors" type="button"><span class="material-symbols-outlined text-[20px]">notifications</span><span class="absolute top-1 right-1 flex items-center justify-center w-4 h-4 bg-error-container text-on-error font-label-sm text-[10px] rounded-full font-bold">3</span></button><button aria-label="Toggle theme" class="flex items-center p-space-xs text-on-surface-variant hover:text-on-surface rounded hover:bg-surface-container transition-colors" onclick="document.documentElement.classList.toggle('dark')" type="button"><span class="material-symbols-outlined text-[20px] dark:hidden">light_mode</span><span class="material-symbols-outlined text-[20px] hidden dark:inline-block">dark_mode</span></button><div class="flex items-center gap-space-sm pl-space-xs"><button aria-label="Profile dropdown" class="flex items-center gap-space-xs p-space-2xs rounded hover:bg-surface-container transition-colors" type="button"><img alt="Profile" class="w-8 h-8 rounded-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCpBZnGEbLP-xA0Yn-NLL2e2MIBEcO-XdI5EdmXpybfUB-7WDj2OFoyNUekphfX0POd2H6Q4yKbnnfNraTr_c0Y-FVGM7s-Sdb6eDGrzt2fEct87F7RvpF9cvr-hj-5-WCpQs5giDW_z92bVKmaKyFmwOUrVytJqxWoEoYlM4svVMgJsUjuE545C9OvCZUwurCbSvIAzUKVGSQ9iaJQfQ84c07BG5IYZiqwtqbmZJZ-"/><span class="material-symbols-outlined text-[18px] text-on-surface-variant">keyboard_arrow_down</span></button></div></div></header><main class="w-full pt-16 bg-surface"><div class="flex flex-col w-full">
+<div class="px-space-xl py-space-lg flex flex-col gap-space-xl max-w-[1720px] mx-auto w-full">
+<!-- Top Action / Context Header -->
+<div class="flex flex-col lg:flex-row lg:items-center justify-between gap-space-lg bg-surface-container-low p-space-lg rounded-xl shadow-md">
+<div class="flex flex-col gap-space-xs">
+<div class="flex flex-wrap items-center gap-space-sm">
+<span class="bg-secondary-container text-on-secondary-container px-space-sm py-space-2xs rounded font-label-sm text-label-sm tracking-wide uppercase font-semibold flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-[14px]">psychology</span>
+            DeepDesk-ITSM v4.2 (Fine-tuned)
+          </span>
+<span class="bg-surface-container-high text-tertiary px-space-sm py-space-2xs rounded font-label-sm text-label-sm flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-[14px]">verified</span>
+            99.4% Triage Precision
+          </span>
+<span class="bg-surface-container text-on-surface-variant px-space-sm py-space-2xs rounded font-label-sm text-label-sm flex items-center gap-space-xs">
+<span class="w-2 h-2 rounded-full bg-tertiary animate-pulse"></span>
+            Real-time Inference Node 04
+          </span>
+</div>
+<h1 class="font-headline-lg text-headline-lg text-on-surface tracking-tight">AI Ticket Analysis &amp; Predictive Triage Engine</h1>
+<p class="font-body-md text-body-md text-on-surface-variant">Automated semantic root-cause attribution, SLA escalation triage, and agentic remediation sequencing.</p>
+</div>
+<div class="flex items-center gap-space-md flex-wrap shrink-0">
+<button class="flex items-center gap-space-sm px-space-md py-space-sm rounded bg-surface-container-high hover:bg-surface-variant text-on-surface font-label-md text-label-md transition-colors shadow-sm" type="button">
+<span class="material-symbols-outlined text-[18px]">history</span>
+<span>Inference Audit Logs</span>
+</button>
+<button class="flex items-center gap-space-sm px-space-md py-space-sm rounded bg-primary text-on-primary font-label-md text-label-md hover:bg-primary-fixed-dim transition-colors shadow-md" id="batchAnalyzeBtn" type="button">
+<span class="material-symbols-outlined text-[18px]">bolt</span>
+<span>Batch Auto-Analyze All New (14)</span>
+</button>
+</div>
+</div>
+<!-- Telemetry Strip -->
+<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-space-md">
+<div class="bg-surface-container p-space-md rounded-xl flex items-center justify-between shadow-sm">
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Weekly Automated Volume</span>
+<span class="font-display-lg text-display-lg text-on-surface font-bold">2,410</span>
+<span class="font-body-sm text-body-sm text-tertiary flex items-center gap-space-2xs mt-space-2xs">
+<span class="material-symbols-outlined text-[14px]">trending_up</span>
+            +18.4% vs last week
+          </span>
+</div>
+<div class="w-12 h-12 rounded-xl bg-surface-container-high flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[24px]">dataset</span>
+</div>
+</div>
+<div class="bg-surface-container p-space-md rounded-xl flex items-center justify-between shadow-sm">
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Triage Latency Avg</span>
+<div class="flex items-baseline gap-space-xs">
+<span class="font-display-lg text-display-lg text-secondary font-bold">4.2</span>
+<span class="font-headline-sm text-headline-sm text-on-surface-variant">sec</span>
+</div>
+<span class="font-body-sm text-body-sm text-on-surface-variant flex items-center gap-space-2xs mt-space-2xs">
+<span class="line-through text-outline">28 min</span> human baseline
+          </span>
+</div>
+<div class="w-12 h-12 rounded-xl bg-surface-container-high flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined text-[24px]">speed</span>
+</div>
+</div>
+<div class="bg-surface-container p-space-md rounded-xl flex items-center justify-between shadow-sm">
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">First-Contact Resolution Lift</span>
+<span class="font-display-lg text-display-lg text-tertiary font-bold">+34.2%</span>
+<span class="font-body-sm text-body-sm text-tertiary flex items-center gap-space-2xs mt-space-2xs">
+<span class="material-symbols-outlined text-[14px]">check_circle</span>
+            612 auto-resolved
+          </span>
+</div>
+<div class="w-12 h-12 rounded-xl bg-surface-container-high flex items-center justify-center text-tertiary">
+<span class="material-symbols-outlined text-[24px]">task_alt</span>
+</div>
+</div>
+<div class="bg-surface-container p-space-md rounded-xl flex items-center justify-between shadow-sm">
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Escalation Routing Accuracy</span>
+<span class="font-display-lg text-display-lg text-primary font-bold">98.9%</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant flex items-center gap-space-2xs mt-space-2xs">
+            Zero re-assignment bounce
+          </span>
+</div>
+<div class="w-12 h-12 rounded-xl bg-surface-container-high flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[24px]">hub</span>
+</div>
+</div>
+</div>
+<!-- Primary Two-Column Workspace -->
+<div class="grid grid-cols-1 xl:grid-cols-12 gap-space-xl items-start">
+<!-- Left Column: Source Incident Workstation (5 Cols) -->
+<div class="xl:col-span-5 flex flex-col gap-space-lg">
+<div class="bg-surface-container-low p-space-lg rounded-xl shadow-md flex flex-col gap-space-md">
+<div class="flex items-center justify-between">
+<span class="font-label-md text-label-md uppercase tracking-wider text-outline flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-[16px]">receipt_long</span>
+              Target Workstation Ticket
+            </span>
+<span class="bg-surface-container text-primary font-label-sm text-label-sm px-space-xs py-space-2xs rounded">Live Sync Active</span>
+</div>
+<!-- Ticket Selection Dropdown Mock -->
+<div class="flex flex-col gap-space-xs">
+<label class="font-label-sm text-label-sm text-on-surface-variant" for="ticketSelect">Active Ticket Payload</label>
+<div class="relative w-full">
+<select class="w-full appearance-none bg-surface-container text-on-surface font-body-md text-body-md pl-space-md pr-10 py-space-sm rounded focus:outline-none focus:bg-surface-container-high cursor-pointer shadow-sm" id="ticketSelect">
+<option selected="" value="SD-4092">SD-4092: Global AWS Route53 DNS propagation failure</option>
+<option value="SD-4091">SD-4091: Okta SAML 2.0 Single Sign-on handshake timeout</option>
+<option value="SD-4088">SD-4088: PostgreSQL read-replica WAL replication lag &gt; 900s</option>
+<option value="SD-4074">SD-4074: Kubernetes ingress-nginx cert-manager rate limiting</option>
+</select>
+<span class="material-symbols-outlined absolute right-space-md top-1/2 -translate-y-1/2 pointer-events-none text-on-surface-variant text-[20px]">unfold_more</span>
+</div>
+</div>
+<!-- Metadata Pill Grid -->
+<div class="grid grid-cols-2 gap-space-sm bg-surface-container p-space-md rounded-lg">
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-outline">Requester</span>
+<span class="font-label-md text-label-md text-on-surface font-semibold flex items-center gap-space-xs">
+                Marcus Vance
+                <span class="font-label-sm text-label-sm text-on-surface-variant font-normal">(Staff DevOps)</span>
+</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-outline">Channel Origin</span>
+<span class="font-label-md text-label-md text-on-surface font-medium flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-[14px] text-tertiary">cell_tower</span>
+                PagerDuty Webhook / API
+              </span>
+</div>
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-outline">Created Timestamp</span>
+<span class="font-label-md text-label-md text-on-surface font-mono text-[12px]">2024-10-27 14:26:11 UTC</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-outline">Original User Priority</span>
+<span class="font-label-md text-label-md text-error flex items-center gap-space-xs font-semibold">
+<span class="w-1.5 h-1.5 rounded-full bg-error"></span>
+                P2 - High (Unescalated)
+              </span>
+</div>
+</div>
+<!-- Raw Ticket Payload Content Viewer -->
+<div class="flex flex-col gap-space-xs">
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Unstructured Incident Body &amp; Telemetry Trace</span>
+<span class="font-label-sm text-label-sm text-outline font-mono">148 tokens</span>
+</div>
+<div class="bg-surface-container-lowest p-space-md rounded-lg text-on-surface font-body-sm text-body-sm leading-relaxed flex flex-col gap-space-sm">
+<p>Multiple production services reporting <code class="bg-surface-container-high px-space-xs py-space-2xs rounded font-mono text-error text-[11px]">SERVFAIL</code> on <span class="font-mono text-primary">api.enterprise.internal</span>. Latency spiked across us-east-1 and eu-central-1 clusters after Terraform deployment at 14:22 UTC. Internal Jenkins builds are failing to resolve internal package repositories.</p>
+<div class="bg-surface-container p-space-sm rounded font-mono text-[11px] text-on-surface-variant flex flex-col gap-1">
+<div class="text-outline uppercase text-[10px] tracking-wider">Attached Stack Trace / Log Excerpt:</div>
+<div class="text-error">&gt; [ERROR] lookup api.enterprise.internal on 10.0.0.2:53: read udp 10.244.3.18:41882-&gt;10.0.0.2:53: i/o timeout</div>
+<div class="text-on-surface">&gt; [INFO] terraform apply run #tf-901-prod finished at 14:22:04 UTC (exit 0)</div>
+<div class="text-secondary">&gt; [METRIC] kube-dns query_latency_seconds_bucket{le="0.5"} dropped by 88.4%</div>
+</div>
+</div>
+</div>
+<!-- Re-Analyze Trigger CTA -->
+<button class="relative overflow-hidden group flex items-center justify-center gap-space-sm w-full py-space-md px-space-lg rounded-xl bg-secondary-container text-on-secondary-container font-label-md text-label-md font-semibold transition-all hover:brightness-110 shadow-lg" id="reAnalyzeButton" type="button">
+<span class="material-symbols-outlined text-[20px] text-secondary group-hover:rotate-45 transition-transform">auto_awesome</span>
+<span>Re-Analyze Ticket with Neural Engine</span>
+<span class="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></span>
+</button>
+</div>
+<!-- Semantic Embeddings Vector Graph Card -->
+<div class="bg-surface-container-low p-space-lg rounded-xl shadow-md flex flex-col gap-space-md">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-[18px] text-secondary">scatter_plot</span>
+<span class="font-headline-sm text-headline-sm text-on-surface">Latent Vector Space Clustering</span>
+</div>
+<span class="font-label-sm text-label-sm text-outline">k-NN = 7</span>
+</div>
+<div class="relative bg-surface-container-lowest p-space-md rounded-lg flex items-center justify-center h-44 overflow-hidden">
+<!-- Inline SVG Scatterplot Visualization -->
+<svg class="w-full h-full" fill="none" viewbox="0 0 360 140" xmlns="http://www.w3.org/2000/svg">
+<circle class="fill-outline-variant opacity-60" cx="40" cy="30" r="3"></circle>
+<circle class="fill-outline-variant opacity-60" cx="80" cy="20" r="4"></circle>
+<circle class="fill-outline-variant opacity-60" cx="120" cy="45" r="3"></circle>
+<circle class="fill-outline-variant opacity-60" cx="150" cy="30" r="4"></circle>
+<circle class="fill-outline-variant opacity-60" cx="60" cy="80" r="3"></circle>
+<!-- Cluster Cloud: Networking -->
+<circle class="fill-secondary/10" cx="280" cy="90" r="38"></circle>
+<circle class="fill-secondary/20" cx="280" cy="90" r="22"></circle>
+<circle class="fill-secondary" cx="265" cy="85" r="4"></circle>
+<circle class="fill-secondary" cx="295" cy="95" r="4.5"></circle>
+<circle class="fill-secondary" cx="275" cy="105" r="3.5"></circle>
+<circle class="fill-secondary" cx="290" cy="78" r="4"></circle>
+<!-- Target Point Animated -->
+<circle class="fill-tertiary shadow-lg" cx="280" cy="90" r="7"></circle>
+<circle class="stroke-tertiary" cx="280" cy="90" r="14" stroke-dasharray="2 3" stroke-width="1.5"></circle>
+<text class="fill-on-surface-variant font-label-sm" font-size="10" x="210" y="40">Cluster #12: AWS Route53 Outages</text>
+<line class="text-outline-variant" stroke="currentColor" stroke-dasharray="2 2" x1="280" x2="250" y1="90" y2="48"></line>
+</svg>
+<div class="absolute bottom-2 left-3 font-label-sm text-label-sm text-outline font-mono">Similarity Distance: 0.042 (High Resonance)</div>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">The ticket embeds cleanly into the <strong>DNS &amp; Hybrid VPC Peering</strong> failure topology, bypassing standard L1 Service Desk queues automatically.</p>
+</div>
+</div>
+<!-- Right Column: Enterprise AI Diagnostic Results (7 Cols) -->
+<div class="xl:col-span-7 flex flex-col gap-space-lg">
+<!-- Executive AI Insight Banner & Confidence Gauge -->
+<div class="bg-gradient-to-br from-surface-container-high via-surface-container to-surface-container-low p-space-lg rounded-xl shadow-lg relative overflow-hidden">
+<div class="absolute right-0 top-0 w-72 h-72 bg-secondary/10 rounded-full blur-3xl pointer-events-none -mr-20 -mt-20"></div>
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-space-lg relative z-10">
+<div class="flex flex-col gap-space-xs">
+<div class="flex items-center gap-space-xs text-secondary font-label-md text-label-md font-semibold">
+<span class="material-symbols-outlined text-[18px]">verified_user</span>
+                High-Certainty Autonomous Assessment
+              </div>
+<h2 class="font-headline-md text-headline-md text-on-surface font-bold">Severity P1 Escalation Advised Immediately</h2>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-xl">
+                Synthesized 4 upstream infrastructure indicators. The incident is not an isolated client resolution bug; it threatens enterprise release pipelines and inter-service authentication across two AWS regions.
+              </p>
+</div>
+<!-- Precision Circular Gauge -->
+<div class="flex items-center gap-space-md shrink-0 bg-surface-container-lowest/80 px-space-lg py-space-md rounded-xl backdrop-blur-md">
+<div class="relative w-16 h-16 flex items-center justify-center">
+<svg class="w-16 h-16 -rotate-90" viewbox="0 0 36 36">
+<path class="text-surface-variant" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-width="3.5"></path>
+<path class="text-tertiary" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-dasharray="96.8, 100" stroke-linecap="round" stroke-width="3.5"></path>
+</svg>
+<span class="absolute font-headline-sm text-headline-sm text-on-surface font-bold">97%</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-outline font-semibold">Model Confidence</span>
+<span class="font-label-md text-label-md text-tertiary font-medium">96.8% High Certainty</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Loss: 0.0084</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Core Predictive Intelligence Cards (Bento Grid) -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-space-md">
+<!-- Category Card -->
+<div class="bg-surface-container p-space-md rounded-xl shadow-sm flex flex-col justify-between gap-space-sm">
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-[16px] text-primary">category</span>
+                Predicted Classification
+              </span>
+<span class="bg-primary/20 text-primary px-space-xs py-space-2xs rounded font-label-sm text-label-sm font-semibold">98% match</span>
+</div>
+<div class="flex flex-col gap-space-2xs">
+<span class="font-headline-sm text-headline-sm text-on-surface font-bold">Cloud Infrastructure / DNS Resolution</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Re-categorized from user-submitted “General IT Support”</span>
+</div>
+</div>
+<!-- Priority Card -->
+<div class="bg-surface-container p-space-md rounded-xl shadow-sm flex flex-col justify-between gap-space-sm">
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-[16px] text-error">priority_high</span>
+                Calculated Priority
+              </span>
+<span class="bg-error/20 text-error px-space-xs py-space-2xs rounded font-label-sm text-label-sm font-semibold flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-error animate-ping"></span>
+                CRITICAL (P1)
+              </span>
+</div>
+<div class="flex flex-col gap-space-2xs">
+<span class="font-headline-sm text-headline-sm text-error font-bold">Escalate P2 → P1 Urgent</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Reasoning: Impairs primary cluster orchestration and CI/CD runtime.</span>
+</div>
+</div>
+<!-- Sentiment Card -->
+<div class="bg-surface-container p-space-md rounded-xl shadow-sm flex flex-col justify-between gap-space-sm">
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-[16px] text-secondary">sentiment_dissatisfied</span>
+                Requester Sentiment Analysis
+              </span>
+<span class="bg-secondary-container text-on-secondary-container px-space-xs py-space-2xs rounded font-label-sm text-label-sm font-semibold">Score: -0.72</span>
+</div>
+<div class="flex flex-col gap-space-2xs">
+<div class="flex items-center gap-space-sm">
+<span class="font-headline-sm text-headline-sm text-on-surface font-bold">High Urgency / Blocked State</span>
+<span class="bg-error-container text-on-error px-space-xs py-space-2xs rounded text-[11px] font-semibold">Escalation Trigger</span>
+</div>
+<div class="w-full bg-surface-container-highest rounded-full h-1.5 overflow-hidden">
+<div class="bg-error h-full rounded-full" style="width: 78%;"></div>
+</div>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Negative stress language identified (“failing”, “spiked”, “SERVFAIL”).</span>
+</div>
+</div>
+<!-- Department & Assignee Card -->
+<div class="bg-surface-container p-space-md rounded-xl shadow-sm flex flex-col justify-between gap-space-sm">
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-[16px] text-tertiary">person_search</span>
+                Recommended Tier-3 Assignee
+              </span>
+<span class="bg-tertiary/20 text-tertiary px-space-xs py-space-2xs rounded font-label-sm text-label-sm font-semibold">Optimal Load</span>
+</div>
+<div class="flex items-center gap-space-sm">
+<div class="w-9 h-9 rounded-full bg-primary/20 text-primary flex items-center justify-center font-bold text-[14px]">
+                AC
+              </div>
+<div class="flex flex-col min-w-0">
+<span class="font-label-md text-label-md text-on-surface font-bold truncate">Alex Chen (Lead SRE)</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant truncate">Cloud Platform &amp; SRE Team • 1 active ticket</span>
+</div>
+<button class="ml-auto bg-surface-container-high hover:bg-surface-variant text-on-surface px-space-sm py-space-xs rounded font-label-sm text-label-sm font-semibold transition-colors" type="button">
+                Assign
+              </button>
+</div>
+</div>
+</div>
+<!-- Root Cause & Cross-Incident Anomaly Correlation -->
+<div class="bg-surface-container-low p-space-lg rounded-xl shadow-md flex flex-col gap-space-md">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-[20px] text-primary">schema</span>
+<span class="font-headline-sm text-headline-sm text-on-surface">Root Cause Attribution &amp; Telemetry Signals</span>
+</div>
+<span class="bg-surface-container text-on-surface-variant font-label-sm text-label-sm px-space-xs py-space-2xs rounded">6 Correlated Incidents</span>
+</div>
+<div class="flex flex-col gap-space-sm">
+<div class="bg-surface-container p-space-md rounded-lg flex items-start gap-space-md">
+<div class="w-8 h-8 rounded bg-error-container text-on-error flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[18px]">commit</span>
+</div>
+<div class="flex flex-col min-w-0">
+<span class="font-label-md text-label-md text-on-surface font-semibold">Suspected Primary Trigger Event</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">
+                  Terraform commit <code class="bg-surface-container-high px-1 py-0.5 rounded font-mono text-primary text-[11px]">8b4f2a9</code> pushed by CI bot at 14:22 UTC modified authoritative NS records in Route53 Private Hosted Zone.
+                </p>
+<div class="flex items-center gap-space-md mt-space-xs font-label-sm text-label-sm text-primary">
+<a class="hover:underline flex items-center gap-1" href="#">View GitHub Commit Diff →</a>
+<span class="text-outline">•</span>
+<span class="text-on-surface-variant">Zone: Z081294829X</span>
+</div>
+</div>
+</div>
+<div class="bg-surface-container p-space-md rounded-lg flex items-start gap-space-md">
+<div class="w-8 h-8 rounded bg-surface-container-highest text-secondary flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[18px]">forum</span>
+</div>
+<div class="flex flex-col min-w-0">
+<span class="font-label-md text-label-md text-on-surface font-semibold">Enterprise Communication Resonance</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">
+                  6 similar symptoms reported across Slack channel <code class="bg-surface-container-high px-1 py-0.5 rounded text-on-surface font-mono text-[11px]">#cloud-incidents</code> in past 45m. Automatic grouping active.
+                </p>
+<div class="flex items-center gap-space-xs mt-space-xs">
+<span class="bg-surface-container-high text-on-surface px-space-xs py-space-2xs rounded font-label-sm text-label-sm">INC-1098</span>
+<span class="bg-surface-container-high text-on-surface px-space-xs py-space-2xs rounded font-label-sm text-label-sm">INC-1099</span>
+<span class="bg-surface-container-high text-on-surface px-space-xs py-space-2xs rounded font-label-sm text-label-sm">SD-4089</span>
+<span class="font-label-sm text-label-sm text-outline">+3 more linked</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- AI Suggested Auto-Response & Resolution Plan -->
+<div class="bg-surface-container-low p-space-lg rounded-xl shadow-md flex flex-col gap-space-md">
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-space-sm">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-[20px] text-tertiary">smart_toy</span>
+<span class="font-headline-sm text-headline-sm text-on-surface">Agentic Resolution &amp; Suggested Response</span>
+</div>
+<div class="flex items-center gap-space-xs">
+<span class="bg-tertiary-container/30 text-tertiary font-label-sm text-label-sm px-space-xs py-space-2xs rounded font-semibold">Ready for Dispatch</span>
+</div>
+</div>
+<!-- Suggested Runbook -->
+<div class="bg-surface-container p-space-md rounded-lg flex items-center justify-between gap-space-md">
+<div class="flex items-center gap-space-md min-w-0">
+<div class="w-9 h-9 rounded-lg bg-surface-container-high text-tertiary flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[20px]">terminal</span>
+</div>
+<div class="flex flex-col min-w-0">
+<div class="flex items-center gap-space-xs">
+<span class="font-label-md text-label-md text-on-surface font-bold truncate">Runbook #104: Route53 Rollback Script</span>
+<span class="bg-tertiary/20 text-tertiary font-label-sm text-[10px] px-1 rounded uppercase">Automated</span>
+</div>
+<span class="font-body-sm text-body-sm text-on-surface-variant truncate">Reverts DNS delegation records to tfstate v41.2 snapshot without manual CLI ingress.</span>
+</div>
+</div>
+<button class="shrink-0 bg-tertiary text-on-tertiary px-space-md py-space-xs rounded font-label-md text-label-md font-semibold hover:bg-tertiary-fixed transition-colors flex items-center gap-space-xs" type="button">
+<span class="material-symbols-outlined text-[16px]">play_arrow</span>
+              Execute Runbook
+            </button>
+</div>
+<!-- Drafted Incident Response -->
+<div class="flex flex-col gap-space-xs">
+<label class="font-label-sm text-label-sm text-on-surface-variant flex items-center justify-between" for="suggestedReply">
+<span>Auto-Drafted Response for Incident Commander</span>
+<span class="text-outline">Markdown Enabled</span>
+</label>
+<textarea class="w-full bg-surface-container text-on-surface font-body-sm text-body-sm p-space-md rounded-lg focus:outline-none focus:bg-surface-container-high transition-colors leading-relaxed resize-none shadow-inner" id="suggestedReply" rows="5">Hi Marcus,
+
+Our automated diagnostic engine flagged ticket SD-4092 as an urgent P1 Cloud Infrastructure incident.
+
+We have correlated the SERVFAIL errors on api.enterprise.internal to Terraform commit 8b4f2a9 executed at 14:22 UTC, affecting Route53 records across us-east-1 and eu-central-1.
+
+Alex Chen (Lead SRE) has been assigned. Runbook #104 has been staged to roll back the DNS state. We will provide another update within 15 minutes.</textarea>
+</div>
+<!-- Action Buttons -->
+<div class="flex flex-wrap items-center justify-between gap-space-md pt-space-xs">
+<div class="flex items-center gap-space-xs text-on-surface-variant font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[16px] text-tertiary">check</span>
+              SLA clock paused upon initial response dispatch
+            </div>
+<div class="flex items-center gap-space-sm">
+<button class="px-space-md py-space-xs rounded bg-surface-container-high hover:bg-surface-variant text-on-surface font-label-md text-label-md transition-colors" id="insertTicketBtn" type="button">
+                Insert to Ticket Draft
+              </button>
+<button class="px-space-md py-space-xs rounded bg-primary text-on-primary font-label-md text-label-md hover:bg-primary-fixed-dim transition-colors flex items-center gap-space-xs shadow-md" id="sendDirectlyBtn" type="button">
+<span class="material-symbols-outlined text-[16px]">send</span>
+                Send &amp; Notify Slack
+              </button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<script>
+  // Dynamic UI micro-interactions
+  const reAnalyzeBtn = document.getElementById('reAnalyzeButton');
+  const ticketSelect = document.getElementById('ticketSelect');
+  const batchBtn = document.getElementById('batchAnalyzeBtn');
+  const insertBtn = document.getElementById('insertTicketBtn');
+  const sendBtn = document.getElementById('sendDirectlyBtn');
+
+  if (reAnalyzeBtn) {
+    reAnalyzeBtn.addEventListener('click', () => {
+      const originalText = reAnalyzeBtn.innerHTML;
+      reAnalyzeBtn.innerHTML = `
+        <span class="material-symbols-outlined text-[20px] animate-spin">refresh</span>
+        <span>Running DeepDesk Transformer Inferences...</span>
+      `;
+      reAnalyzeBtn.disabled = true;
+      setTimeout(() => {
+        reAnalyzeBtn.innerHTML = `
+          <span class="material-symbols-outlined text-[20px] text-tertiary">check_circle</span>
+          <span>Triage Model Synced (0.84s)</span>
+        `;
+        setTimeout(() => {
+          reAnalyzeBtn.innerHTML = originalText;
+          reAnalyzeBtn.disabled = false;
+        }, 1500);
+      }, 1000);
+    });
+  }
+
+  if (batchBtn) {
+    batchBtn.addEventListener('click', () => {
+      batchBtn.innerHTML = `<span class="material-symbols-outlined text-[18px] animate-spin">sync</span> Triaging 14 Queues...`;
+      setTimeout(() => {
+        batchBtn.innerHTML = `<span class="material-symbols-outlined text-[18px]">done_all</span> 14 Tickets Processed`;
+        setTimeout(() => {
+          batchBtn.innerHTML = `<span class="material-symbols-outlined text-[18px]">bolt</span> Batch Auto-Analyze All New (0)`;
+        }, 2000);
+      }, 1200);
+    });
+  }
+
+  if (insertBtn) {
+    insertBtn.addEventListener('click', () => {
+      const originalText = insertBtn.textContent;
+      insertBtn.textContent = 'Appended to SD-4092!';
+      insertBtn.classList.add('bg-tertiary-container', 'text-on-tertiary');
+      setTimeout(() => {
+        insertBtn.textContent = originalText;
+        insertBtn.classList.remove('bg-tertiary-container', 'text-on-tertiary');
+      }, 1800);
+    });
+  }
+
+  if (sendBtn) {
+    sendBtn.addEventListener('click', () => {
+      const originalHtml = sendBtn.innerHTML;
+      sendBtn.innerHTML = `<span class="material-symbols-outlined text-[16px]">check</span> Dispatched!`;
+      setTimeout(() => {
+        sendBtn.innerHTML = originalHtml;
+      }, 2000);
+    });
+  }
+</script></main></div></body></html>

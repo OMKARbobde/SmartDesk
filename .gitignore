@@ -1,0 +1,72 @@
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Django
+*.log
+local_settings.py
+
+# Virtual environments
+venv/
+.venv/
+env/
+llm_env_25/
+
+# SQLite database
+*.sqlite3
+*.sqlite3-journal
+*.db
+*.sqlite
+*.bak
+*.backup
+*.dump
+*.sql
+
+# Excluded alternate/backup frontend trees
+/frontend/
+/frontend_backup/
+
+# Environment variables and secrets
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+
+# Node
+node_modules/
+
+# Build files
+dist/
+build/
+
+# Testing and coverage
+.coverage
+htmlcov/
+.pytest_cache/
+coverage/
+test-results/
+playwright-report/
+blob-report/
+.playwright/
+.vite/
+*.har
+*.webm
+*.tmp
+*.temp
+/tmp/
+/temp/
+browser-profile/
+chrome-profile/
+
+# IDE
+.vscode/
+.idea/
+
+# OS files
+.DS_Store
+Thumbs.db

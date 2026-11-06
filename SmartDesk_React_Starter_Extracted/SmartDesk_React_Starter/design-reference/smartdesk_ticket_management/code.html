@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_dashboard" name="shell-type"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config={darkMode:"class",theme:{extend:{colors:{"error-container":"#93000a","primary":"#adc6ff","surface-variant":"#31353e","inverse-primary":"#005ac2","surface-bright":"#353942","on-surface-variant":"#c2c6d6","on-primary-container":"#00285d","primary-fixed":"#d8e2ff","tertiary-fixed":"#6ffbbe","secondary-container":"#571bc1","tertiary":"#4edea3","on-primary-fixed-variant":"#004395","on-surface":"#dfe2ee","surface":"#0f131c","surface-container-low":"#181c24","on-tertiary-container":"#00311f","secondary-fixed-dim":"#d0bcff","on-secondary-fixed":"#23005c","secondary-fixed":"#e9ddff","tertiary-fixed-dim":"#4edea3","inverse-surface":"#dfe2ee","surface-container":"#1c2028","inverse-on-surface":"#2c3039","primary-fixed-dim":"#adc6ff","surface-tint":"#adc6ff","on-primary-fixed":"#001a42","on-primary":"#002e6a","surface-container-lowest":"#0a0e16","surface-container-highest":"#31353e","error":"#ffb4ab","on-secondary":"#3c0091","tertiary-container":"#00a572","on-tertiary":"#003824","on-secondary-fixed-variant":"#5516be","on-tertiary-fixed-variant":"#005236","primary-container":"#4d8eff","on-error":"#690005","on-background":"#dfe2ee","on-error-container":"#ffdad6","surface-container-high":"#262a33","secondary":"#d0bcff","background":"#0f131c","outline-variant":"#424754","surface-dim":"#0f131c","on-secondary-container":"#c4abff","on-tertiary-fixed":"#002113","outline":"#8c909f"},borderRadius:{"DEFAULT":"0.125rem","lg":"0.25rem","xl":"0.5rem","full":"0.75rem"},spacing:{"gutter-dense":"0.5rem","gutter":"1rem","space-xl":"1.5rem","margin":"1.5rem","space-2xl":"2rem","space-sm":"0.5rem","space-lg":"1rem","space-2xs":"0.125rem","space-xs":"0.25rem","margin-compact":"1rem","space-md":"0.75rem"},fontFamily:{"headline-lg-mobile":["Inter"],"label-sm":["Inter"],"display-lg":["Inter"],"body-lg":["Inter"],"metric-num":["Inter"],"headline-sm":["Inter"],"label-md":["Inter"],"body-sm":["Inter"],"headline-lg":["Inter"],"headline-md":["Inter"],"body-md":["Inter"]},fontSize:{"headline-lg-mobile":["22px",{lineHeight:"28px",letterSpacing:"-0.015em",fontWeight:"600"}],"label-sm":["11px",{lineHeight:"14px",letterSpacing:"0.02em",fontWeight:"500"}],"display-lg":["36px",{lineHeight:"44px",letterSpacing:"-0.025em",fontWeight:"600"}],"body-lg":["15px",{lineHeight:"22px",letterSpacing:"-0.005em",fontWeight:"400"}],"metric-num":["24px",{lineHeight:"28px",letterSpacing:"-0.02em",fontWeight:"600"}],"headline-sm":["16px",{lineHeight:"24px",letterSpacing:"-0.01em",fontWeight:"600"}],"label-md":["13px",{lineHeight:"16px",letterSpacing:"0em",fontWeight:"500"}],"body-sm":["12px",{lineHeight:"16px",letterSpacing:"0em",fontWeight:"400"}],"headline-lg":["28px",{lineHeight:"36px",letterSpacing:"-0.02em",fontWeight:"600"}],"headline-md":["20px",{lineHeight:"28px",letterSpacing:"-0.015em",fontWeight:"600"}],"body-md":["13px",{lineHeight:"18px",letterSpacing:"0em",fontWeight:"400"}]}}}};</script></head><body class="bg-surface font-body-md text-on-surface antialiased min-h-screen"><aside class="fixed left-0 top-0 h-screen w-64 bg-surface-container-low z-50 flex flex-col justify-between"><div class="flex flex-col"><div class="h-16 px-space-lg flex items-center justify-between"><div class="flex items-center gap-space-sm"><img alt="SmartDesk Logo" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1XLtcxM90aaK0PSI9Fgg_5xE8bF7jzHVI5BeTUn6KvqUYASS9xg8adkaUpuW3qtnGVe2cpkB059mKVNTijg6xekfHTtNmcpc84bzMLmEb4oKuNZDHa2lUmZuGNNPReZ3kw8HrM0OjrirMbOJbLG5gA0ZfYbVXyCztXIgkSOi6X5jlxemoaLNhEd-pZVtIVZCUYLzY6nkUct9PUA4XuadphVehvEZUcU-EpBNexF47tUig"/><span class="font-headline-sm text-headline-sm text-on-surface tracking-tight">SmartDesk</span></div><button aria-label="Collapse sidebar" class="text-on-surface-variant hover:text-on-surface p-space-xs rounded transition-colors" type="button"><span class="material-symbols-outlined text-[20px]">dock_to_left</span></button></div><div class="px-space-md py-space-xs"><span class="font-label-sm text-label-sm text-outline uppercase tracking-wider px-space-sm">Operations</span></div><nav class="flex flex-col gap-space-2xs px-space-sm" data-active-classes="bg-surface-container-high text-primary font-label-md"><a class="flex items-center justify-between px-space-md py-space-sm rounded text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-all" data-path="dashboard" href="#"><div class="flex items-center gap-space-md"><span class="material-symbols-outlined text-[18px]">dashboard</span><span class="font-label-md text-label-md">Dashboard</span></div></a><a aria-current="page" class="flex items-center justify-between px-space-md py-space-sm rounded transition-all bg-surface-container-high text-primary font-label-md" data-path="tickets" href="#"><div class="flex items-center gap-space-md"><span class="material-symbols-outlined text-[18px]">confirmation_number</span><span class="font-label-md text-label-md">Tickets</span></div><span class="bg-surface-container-highest text-on-surface font-label-sm text-label-sm px-space-xs py-space-2xs rounded">14</span></a><a class="flex items-center justify-between px-space-md py-space-sm rounded text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-all" data-path="ai-analysis" href="#"><div class="flex items-center gap-space-md"><span class="material-symbols-outlined text-[18px] text-secondary">auto_awesome</span><span class="font-label-md text-label-md">AI Analysis</span></div><span class="bg-secondary-container text-on-secondary-container font-label-sm text-label-sm px-space-xs py-space-2xs rounded font-bold">AI</span></a><a class="flex items-center justify-between px-space-md py-space-sm rounded text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-all" data-path="assignments" href="#"><div class="flex items-center gap-space-md"><span class="material-symbols-outlined text-[18px]">assignment_ind</span><span class="font-label-md text-label-md">Assignments</span></div></a><div class="pt-space-md pb-space-xs"><span class="font-label-sm text-label-sm text-outline uppercase tracking-wider px-space-sm">Organization</span></div><a class="flex items-center justify-between px-space-md py-space-sm rounded text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-all" data-path="employees" href="#"><div class="flex items-center gap-space-md"><span class="material-symbols-outlined text-[18px]">group</span><span class="font-label-md text-label-md">Employees</span></div></a><a class="flex items-center justify-between px-space-md py-space-sm rounded text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-all" data-path="departments" href="#"><div class="flex items-center gap-space-md"><span class="material-symbols-outlined text-[18px]">domain</span><span class="font-label-md text-label-md">Departments</span></div></a><a class="flex items-center justify-between px-space-md py-space-sm rounded text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-all" data-path="reports" href="#"><div class="flex items-center gap-space-md"><span class="material-symbols-outlined text-[18px]">bar_chart</span><span class="font-label-md text-label-md">Reports</span></div></a><a class="flex items-center justify-between px-space-md py-space-sm rounded text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-all" data-path="settings" href="#"><div class="flex items-center gap-space-md"><span class="material-symbols-outlined text-[18px]">settings</span><span class="font-label-md text-label-md">Settings</span></div></a></nav></div><div class="p-space-sm m-space-sm bg-surface-container rounded-lg"><div class="flex items-center justify-between p-space-xs"><div class="flex items-center gap-space-sm"><div class="relative"><img alt="Profile" class="w-8 h-8 rounded-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCpBZnGEbLP-xA0Yn-NLL2e2MIBEcO-XdI5EdmXpybfUB-7WDj2OFoyNUekphfX0POd2H6Q4yKbnnfNraTr_c0Y-FVGM7s-Sdb6eDGrzt2fEct87F7RvpF9cvr-hj-5-WCpQs5giDW_z92bVKmaKyFmwOUrVytJqxWoEoYlM4svVMgJsUjuE545C9OvCZUwurCbSvIAzUKVGSQ9iaJQfQ84c07BG5IYZiqwtqbmZJZ-"/><span class="absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full bg-tertiary ring-2 ring-surface-container"></span></div><div class="flex flex-col min-w-0"><span class="font-label-md text-label-md text-on-surface font-semibold truncate">Sarah Jenkins</span><span class="font-body-sm text-body-sm text-on-surface-variant truncate">Director of IT Ops</span></div></div><button aria-label="User actions" class="text-on-surface-variant hover:text-on-surface p-space-2xs" type="button"><span class="material-symbols-outlined text-[18px]">more_vert</span></button></div></div></aside><div class="pl-64"><header class="fixed top-0 left-64 right-0 h-16 bg-surface/85 backdrop-blur-xl z-40 flex items-center justify-between px-space-xl"><div class="flex items-center gap-space-lg"><div class="flex items-center gap-space-xs text-on-surface-variant font-body-sm text-body-sm"><span class="hover:text-on-surface cursor-pointer">Platform</span><span class="material-symbols-outlined text-[14px]">chevron_right</span><span class="text-on-surface font-medium">Service Management</span></div><div class="relative flex items-center w-80"><span class="material-symbols-outlined absolute left-space-md text-[18px] text-outline pointer-events-none">search</span><input class="w-full bg-surface-container-low text-on-surface placeholder:text-outline font-body-sm text-body-sm pl-9 pr-12 py-space-xs rounded focus:outline-none focus:ring-1 focus:ring-primary transition-all" placeholder="Search incidents, services, records..." type="text"/><div class="absolute right-space-sm flex items-center gap-space-2xs bg-surface-container-high px-space-xs py-space-2xs rounded font-label-sm text-label-sm text-on-surface-variant pointer-events-none"><span class="text-[10px]">⌘</span><span>K</span></div></div></div><div class="flex items-center gap-space-md"><button aria-label="Notifications" class="relative p-space-xs text-on-surface-variant hover:text-on-surface rounded hover:bg-surface-container transition-colors" type="button"><span class="material-symbols-outlined text-[20px]">notifications</span><span class="absolute top-1 right-1 flex items-center justify-center w-4 h-4 bg-error-container text-on-error font-label-sm text-[10px] rounded-full font-bold">3</span></button><button aria-label="Toggle theme" class="flex items-center p-space-xs text-on-surface-variant hover:text-on-surface rounded hover:bg-surface-container transition-colors" onclick="document.documentElement.classList.toggle('dark')" type="button"><span class="material-symbols-outlined text-[20px] dark:hidden">light_mode</span><span class="material-symbols-outlined text-[20px] hidden dark:inline-block">dark_mode</span></button><div class="flex items-center gap-space-sm pl-space-xs"><button aria-label="Profile dropdown" class="flex items-center gap-space-xs p-space-2xs rounded hover:bg-surface-container transition-colors" type="button"><img alt="Profile" class="w-8 h-8 rounded-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCpBZnGEbLP-xA0Yn-NLL2e2MIBEcO-XdI5EdmXpybfUB-7WDj2OFoyNUekphfX0POd2H6Q4yKbnnfNraTr_c0Y-FVGM7s-Sdb6eDGrzt2fEct87F7RvpF9cvr-hj-5-WCpQs5giDW_z92bVKmaKyFmwOUrVytJqxWoEoYlM4svVMgJsUjuE545C9OvCZUwurCbSvIAzUKVGSQ9iaJQfQ84c07BG5IYZiqwtqbmZJZ-"/><span class="material-symbols-outlined text-[18px] text-on-surface-variant">keyboard_arrow_down</span></button></div></div></header><main class="w-full pt-16 bg-surface"><div class="flex flex-col w-full">
+<div class="px-space-xl py-space-lg flex flex-col gap-space-lg">
+<div class="flex flex-col gap-space-md md:flex-row md:items-center md:justify-between">
+<div class="flex items-center gap-space-md">
+<h1 class="font-headline-lg text-headline-lg text-on-surface tracking-tight">Ticket Management</h1>
+<div class="flex items-center gap-space-xs px-space-sm py-space-2xs bg-surface-container-high rounded text-on-surface-variant font-label-sm text-label-sm">
+<span class="w-1.5 h-1.5 rounded-full bg-primary animate-pulse"></span>
+<span>1,284 tickets</span>
+</div>
+</div>
+<div class="flex items-center gap-space-sm">
+<button class="flex items-center gap-space-xs px-space-md py-space-xs bg-surface-container-high hover:bg-surface-container-highest text-on-surface rounded font-label-md text-label-md transition-colors shadow-sm" type="button">
+<span class="material-symbols-outlined text-[18px]">file_download</span>
+<span>Export CSV</span>
+</button>
+<button class="flex items-center gap-space-xs px-space-md py-space-xs bg-primary hover:bg-primary-container text-on-primary rounded font-label-md text-label-md transition-all shadow-md" onclick="document.getElementById('ticket-drawer').classList.remove('translate-x-full')" type="button">
+<span class="material-symbols-outlined text-[18px]">add</span>
+<span>Create Ticket</span>
+</button>
+</div>
+</div>
+<div class="flex items-center justify-between overflow-x-auto bg-surface-container-lowest p-space-2xs rounded-lg">
+<div class="flex items-center gap-space-2xs">
+<button class="px-space-md py-space-xs bg-surface-container-high text-primary font-label-md text-label-md rounded transition-all" type="button">All Tickets</button>
+<button class="flex items-center gap-space-xs px-space-md py-space-xs text-on-surface-variant hover:text-on-surface hover:bg-surface-container rounded font-label-md text-label-md transition-all" type="button">
+<span>My Assigned</span>
+<span class="px-space-xs py-space-2xs bg-surface-container-highest text-primary font-label-sm text-label-sm rounded-full">14</span>
+</button>
+<button class="flex items-center gap-space-xs px-space-md py-space-xs text-on-surface-variant hover:text-on-surface hover:bg-surface-container rounded font-label-md text-label-md transition-all" type="button">
+<span>Unassigned</span>
+<span class="px-space-xs py-space-2xs bg-surface-container-highest text-on-surface-variant font-label-sm text-label-sm rounded-full">8</span>
+</button>
+<button class="flex items-center gap-space-xs px-space-md py-space-xs text-on-surface-variant hover:text-on-surface hover:bg-surface-container rounded font-label-md text-label-md transition-all" type="button">
+<span>SLA At Risk</span>
+<span class="px-space-xs py-space-2xs bg-error-container text-on-error font-label-sm text-label-sm rounded-full">3</span>
+</button>
+<button class="px-space-md py-space-xs text-on-surface-variant hover:text-on-surface hover:bg-surface-container rounded font-label-md text-label-md transition-all" type="button">Recently Closed</button>
+</div>
+<div class="flex items-center gap-space-xs px-space-xs">
+<span class="material-symbols-outlined text-[16px] text-outline">tune</span>
+<button class="flex items-center gap-space-2xs text-on-surface-variant hover:text-on-surface font-label-sm text-label-sm px-space-xs py-space-2xs rounded" type="button">
+<span>Saved: Critical Incidents</span>
+<span class="material-symbols-outlined text-[14px]">arrow_drop_down</span>
+</button>
+</div>
+</div>
+<div class="bg-surface-container p-space-md rounded-lg flex flex-col gap-space-md shadow-sm">
+<div class="grid grid-cols-1 md:grid-cols-12 gap-space-sm items-center">
+<div class="relative md:col-span-4 flex items-center">
+<span class="material-symbols-outlined absolute left-space-md text-[18px] text-outline pointer-events-none">search</span>
+<input class="w-full bg-surface-container-lowest text-on-surface placeholder:text-outline font-body-sm text-body-sm pl-9 pr-14 py-space-xs rounded focus:outline-none focus:ring-1 focus:ring-primary transition-all" placeholder="Filter by ID, incident title, or keyword..." type="text"/>
+<div class="absolute right-space-sm flex items-center gap-space-2xs bg-surface-container-high px-space-xs py-space-2xs rounded font-label-sm text-label-sm text-on-surface-variant pointer-events-none">
+<span>/</span>
+</div>
+</div>
+<div class="md:col-span-2 relative">
+<select class="w-full appearance-none bg-surface-container-lowest text-on-surface font-body-sm text-body-sm px-space-md py-space-xs rounded focus:outline-none cursor-pointer">
+<option>Status: All</option>
+<option>Open</option>
+<option>In Progress</option>
+<option>Resolved</option>
+<option>Closed</option>
+</select>
+<span class="material-symbols-outlined absolute right-space-sm top-1/2 -translate-y-1/2 text-[16px] text-outline pointer-events-none">expand_more</span>
+</div>
+<div class="md:col-span-2 relative">
+<select class="w-full appearance-none bg-surface-container-lowest text-on-surface font-body-sm text-body-sm px-space-md py-space-xs rounded focus:outline-none cursor-pointer">
+<option>Priority: All</option>
+<option>Critical (P1)</option>
+<option>High (P2)</option>
+<option>Medium (P3)</option>
+<option>Low (P4)</option>
+</select>
+<span class="material-symbols-outlined absolute right-space-sm top-1/2 -translate-y-1/2 text-[16px] text-outline pointer-events-none">expand_more</span>
+</div>
+<div class="md:col-span-2 relative">
+<select class="w-full appearance-none bg-surface-container-lowest text-on-surface font-body-sm text-body-sm px-space-md py-space-xs rounded focus:outline-none cursor-pointer">
+<option>Dept: All</option>
+<option>DevOps / Infra</option>
+<option>SecOps</option>
+<option>IT Operations</option>
+<option>HR Ops</option>
+<option>Database Ops</option>
+</select>
+<span class="material-symbols-outlined absolute right-space-sm top-1/2 -translate-y-1/2 text-[16px] text-outline pointer-events-none">expand_more</span>
+</div>
+<div class="md:col-span-2 flex items-center gap-space-xs">
+<button class="w-full flex items-center justify-between bg-surface-container-lowest text-on-surface-variant hover:text-on-surface font-body-sm text-body-sm px-space-md py-space-xs rounded transition-colors" type="button">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-[16px]">calendar_today</span>
+<span>Last 7 Days</span>
+</div>
+<span class="material-symbols-outlined text-[16px] text-outline">expand_more</span>
+</button>
+</div>
+</div>
+<div class="flex flex-wrap items-center justify-between gap-space-sm pt-space-xs">
+<div class="flex flex-wrap items-center gap-space-xs">
+<span class="font-label-sm text-label-sm text-outline uppercase tracking-wider">Active Filters:</span>
+<div class="flex items-center gap-space-xs bg-surface-container-high px-space-sm py-space-2xs rounded font-label-sm text-label-sm text-on-surface">
+<span>Priority: Critical, High</span>
+<button class="text-on-surface-variant hover:text-on-surface flex items-center" type="button">
+<span class="material-symbols-outlined text-[14px]">close</span>
+</button>
+</div>
+<div class="flex items-center gap-space-xs bg-surface-container-high px-space-sm py-space-2xs rounded font-label-sm text-label-sm text-on-surface">
+<span>Status: In Progress</span>
+<button class="text-on-surface-variant hover:text-on-surface flex items-center" type="button">
+<span class="material-symbols-outlined text-[14px]">close</span>
+</button>
+</div>
+<div class="flex items-center gap-space-xs bg-surface-container-high px-space-sm py-space-2xs rounded font-label-sm text-label-sm text-on-surface">
+<span>Dept: DevOps, SecOps</span>
+<button class="text-on-surface-variant hover:text-on-surface flex items-center" type="button">
+<span class="material-symbols-outlined text-[14px]">close</span>
+</button>
+</div>
+<button class="text-primary hover:text-primary-fixed font-label-sm text-label-sm px-space-xs py-space-2xs" type="button">Clear All</button>
+</div>
+<div class="flex items-center gap-space-xs bg-surface-container-lowest px-space-sm py-space-2xs rounded">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Batch Actions (Selected 2):</span>
+<button class="px-space-xs py-space-2xs hover:bg-surface-container-high text-on-surface rounded font-label-sm text-label-sm transition-colors" type="button">Assign</button>
+<button class="px-space-xs py-space-2xs hover:bg-surface-container-high text-on-surface rounded font-label-sm text-label-sm transition-colors" type="button">Escalate</button>
+<button class="px-space-xs py-space-2xs hover:bg-error-container text-error rounded font-label-sm text-label-sm transition-colors" type="button">Close</button>
+</div>
+</div>
+</div>
+<div class="overflow-x-auto bg-surface-container-low rounded-lg shadow-sm">
+<table class="w-full text-left font-body-sm text-body-sm">
+<thead class="bg-surface-container-highest/50 text-on-surface-variant font-label-md text-label-md uppercase tracking-wider select-none">
+<tr>
+<th class="p-space-md w-10">
+<input checked="" class="w-4 h-4 rounded bg-surface-container-lowest accent-primary cursor-pointer" type="checkbox"/>
+</th>
+<th class="p-space-md w-28">Ticket ID</th>
+<th class="p-space-md">Title &amp; Context</th>
+<th class="p-space-md w-36">Department</th>
+<th class="p-space-md w-44">Requester</th>
+<th class="p-space-md w-44">Assigned To</th>
+<th class="p-space-md w-28">Priority</th>
+<th class="p-space-md w-32">Status</th>
+<th class="p-space-md w-44">SLA Breach Window</th>
+<th class="p-space-md w-16 text-right">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-surface-container">
+<tr class="hover:bg-surface-container cursor-pointer transition-colors bg-surface-container/20 group" onclick="document.getElementById('ticket-drawer').classList.remove('translate-x-full')">
+<td class="p-space-md" onclick="event.stopPropagation()">
+<input checked="" class="w-4 h-4 rounded bg-surface-container-lowest accent-primary cursor-pointer" type="checkbox"/>
+</td>
+<td class="p-space-md font-mono text-primary font-semibold">SD-4092</td>
+<td class="p-space-md">
+<div class="flex flex-col max-w-md">
+<span class="font-headline-sm text-headline-sm text-on-surface truncate group-hover:text-primary transition-colors">Global AWS Route53 DNS propagation failure</span>
+<span class="text-on-surface-variant text-[11px] truncate">Root nameservers reporting 34% drop in TTL sync on US-East-1 Edge clusters</span>
+</div>
+</td>
+<td class="p-space-md">
+<span class="px-space-xs py-space-2xs bg-surface-container-high text-on-surface rounded font-label-sm text-label-sm">DevOps</span>
+</td>
+<td class="p-space-md">
+<div class="flex items-center gap-space-xs">
+<img class="w-6 h-6 rounded-full object-cover" data-alt="Corporate headshot of Marcus Vance, Senior Site Reliability Engineer, wearing navy sweater in clean modern tech environment" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD9m2E9IPc7xVj9049sq-6GJ9CBaS2jYa1a0Vkp40Y52Ck1VBzUQgBt5zWqxOybrBjduuraiPZhzpcdkjwfLefCxRXt-M0jCdWdQvfwvbqA-rnm4hTcXlNHvM1uPPpOc14s-PLvOANW3o64OvKkCsVwivMMDGfQ-Tj6L7eXGDKWh8QPjnOOBwHe4Qq2h1UCmH62iMrVjx59Olrjnp_X6rWiIcJu2Vx_HL0sHDTLUxzT"/>
+<span class="text-on-surface truncate">Marcus Vance</span>
+</div>
+</td>
+<td class="p-space-md">
+<div class="flex items-center gap-space-xs">
+<img class="w-6 h-6 rounded-full object-cover" data-alt="Portrait of Alex Mercer, Lead Cloud Architect with spectacles in subtle neon-tinted server room setting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA1fcSo82pwn-EahFhe9uGY8N4nk8-1euoTcMl9fDooVfMCLsm7hGGdpROJUGXbvJzCviIRk5i8f1Pxvp1Yv-Ub6QGow8flh4tMVHeiPqITj8BUqO4YLop120RL19b4ru2zH_Gy_OIG3XlVozj7dW0IHEMdDi6iq-88pFAWvsQltZorMvpJ7VVNq6vhSbjullwznowmNJ_NZ4vYOr4ZA3S_QCL1-XLrtqYJUtCB-Sej"/>
+<span class="text-on-surface truncate">Alex Mercer</span>
+</div>
+</td>
+<td class="p-space-md">
+<span class="inline-flex items-center gap-space-2xs px-space-xs py-space-2xs rounded bg-error-container/40 text-error font-label-sm text-label-sm">
+<span class="w-1.5 h-1.5 rounded-full bg-error animate-ping"></span>
+<span>Critical</span>
+</span>
+</td>
+<td class="p-space-md">
+<span class="px-space-xs py-space-2xs rounded bg-primary-container/20 text-primary font-label-sm text-label-sm">In Progress</span>
+</td>
+<td class="p-space-md">
+<div class="flex flex-col gap-space-2xs w-36">
+<div class="flex items-center justify-between text-[11px]">
+<span class="text-error font-medium">18m left</span>
+<span class="text-on-surface-variant">92%</span>
+</div>
+<div class="w-full h-1.5 bg-surface-container-high rounded-full overflow-hidden">
+<div class="h-full bg-error rounded-full w-[92%]"></div>
+</div>
+</div>
+</td>
+<td class="p-space-md text-right" onclick="event.stopPropagation()">
+<button class="p-space-2xs text-on-surface-variant hover:text-on-surface rounded hover:bg-surface-container-highest" type="button">
+<span class="material-symbols-outlined text-[18px]">more_horiz</span>
+</button>
+</td>
+</tr>
+<tr class="hover:bg-surface-container cursor-pointer transition-colors group" onclick="document.getElementById('ticket-drawer').classList.remove('translate-x-full')">
+<td class="p-space-md" onclick="event.stopPropagation()">
+<input checked="" class="w-4 h-4 rounded bg-surface-container-lowest accent-primary cursor-pointer" type="checkbox"/>
+</td>
+<td class="p-space-md font-mono text-primary font-semibold">SD-4088</td>
+<td class="p-space-md">
+<div class="flex flex-col max-w-md">
+<span class="font-headline-sm text-headline-sm text-on-surface truncate group-hover:text-primary transition-colors">New Hire Provisioning: Senior Data Scientist laptop setup</span>
+<span class="text-on-surface-variant text-[11px] truncate">M3 Max MacBook Pro provision with CUDA tooling and Okta identity certs</span>
+</div>
+</td>
+<td class="p-space-md">
+<span class="px-space-xs py-space-2xs bg-surface-container-high text-on-surface rounded font-label-sm text-label-sm">HR / IT Ops</span>
+</td>
+<td class="p-space-md">
+<div class="flex items-center gap-space-xs">
+<div class="w-6 h-6 rounded-full bg-secondary-container text-on-secondary-container flex items-center justify-center font-label-sm text-[10px]">EW</div>
+<span class="text-on-surface truncate">Elena Rostova</span>
+</div>
+</td>
+<td class="p-space-md">
+<div class="flex items-center gap-space-xs text-on-surface-variant">
+<span class="material-symbols-outlined text-[16px]">person_off</span>
+<span class="italic text-[12px]">Unassigned</span>
+</div>
+</td>
+<td class="p-space-md">
+<span class="inline-flex items-center px-space-xs py-space-2xs rounded bg-surface-container-high text-on-surface-variant font-label-sm text-label-sm">Medium</span>
+</td>
+<td class="p-space-md">
+<span class="px-space-xs py-space-2xs rounded bg-surface-variant text-on-surface font-label-sm text-label-sm">Open</span>
+</td>
+<td class="p-space-md">
+<div class="flex flex-col gap-space-2xs w-36">
+<div class="flex items-center justify-between text-[11px]">
+<span class="text-tertiary">14h 20m</span>
+<span class="text-on-surface-variant">25%</span>
+</div>
+<div class="w-full h-1.5 bg-surface-container-high rounded-full overflow-hidden">
+<div class="h-full bg-tertiary rounded-full w-[25%]"></div>
+</div>
+</div>
+</td>
+<td class="p-space-md text-right" onclick="event.stopPropagation()">
+<button class="p-space-2xs text-on-surface-variant hover:text-on-surface rounded hover:bg-surface-container-highest" type="button">
+<span class="material-symbols-outlined text-[18px]">more_horiz</span>
+</button>
+</td>
+</tr>
+<tr class="hover:bg-surface-container cursor-pointer transition-colors group" onclick="document.getElementById('ticket-drawer').classList.remove('translate-x-full')">
+<td class="p-space-md" onclick="event.stopPropagation()">
+<input class="w-4 h-4 rounded bg-surface-container-lowest accent-primary cursor-pointer" type="checkbox"/>
+</td>
+<td class="p-space-md font-mono text-primary font-semibold">SD-4085</td>
+<td class="p-space-md">
+<div class="flex flex-col max-w-md">
+<span class="font-headline-sm text-headline-sm text-on-surface truncate group-hover:text-primary transition-colors">CrowdStrike agent causing high CPU spike on Windows workstations</span>
+<span class="text-on-surface-variant text-[11px] truncate">CSFalconService pegged at 100% core saturation on 24 developer machines</span>
+</div>
+</td>
+<td class="p-space-md">
+<span class="px-space-xs py-space-2xs bg-surface-container-high text-on-surface rounded font-label-sm text-label-sm">SecOps</span>
+</td>
+<td class="p-space-md">
+<div class="flex items-center gap-space-xs">
+<div class="w-6 h-6 rounded-full bg-surface-container-highest text-on-surface flex items-center justify-center font-label-sm text-[10px]">DK</div>
+<span class="text-on-surface truncate">Devon King</span>
+</div>
+</td>
+<td class="p-space-md">
+<div class="flex items-center gap-space-xs">
+<img class="w-6 h-6 rounded-full object-cover" data-alt="Portrait of Priya Patel, Cyber Security Incident Responder in sleek dark technology monitoring facility" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDteu_tVPlvSWKhgOv-a3w-_njiHqvCLPfB47g1b8J6g_xg1C5vpKFsKVKAGLoE3jBTvBisPeylSKgsvG9P8DHeS8AkoY858ljXeKvNRWXf2YV_SgQzvKY6OQ2mxGaTMjzNME3Sr8WQNyfCmWeTYm3ABJN4-l9zzvoGmFUiQwT0A6Y-m-c6dPEY00eGXkQlY3PZ17DbsZyOipuFmogFQpLCTetTwSUUJ8HWn7TM4POB"/>
+<span class="text-on-surface truncate">Priya Patel</span>
+</div>
+</td>
+<td class="p-space-md">
+<span class="inline-flex items-center px-space-xs py-space-2xs rounded bg-surface-variant text-error font-label-sm text-label-sm font-semibold">High</span>
+</td>
+<td class="p-space-md">
+<span class="px-space-xs py-space-2xs rounded bg-primary-container/20 text-primary font-label-sm text-label-sm">In Progress</span>
+</td>
+<td class="p-space-md">
+<div class="flex flex-col gap-space-2xs w-36">
+<div class="flex items-center justify-between text-[11px]">
+<span class="text-primary">1h 45m</span>
+<span class="text-on-surface-variant">74%</span>
+</div>
+<div class="w-full h-1.5 bg-surface-container-high rounded-full overflow-hidden">
+<div class="h-full bg-primary rounded-full w-[74%]"></div>
+</div>
+</div>
+</td>
+<td class="p-space-md text-right" onclick="event.stopPropagation()">
+<button class="p-space-2xs text-on-surface-variant hover:text-on-surface rounded hover:bg-surface-container-highest" type="button">
+<span class="material-symbols-outlined text-[18px]">more_horiz</span>
+</button>
+</td>
+</tr>
+<tr class="hover:bg-surface-container cursor-pointer transition-colors group" onclick="document.getElementById('ticket-drawer').classList.remove('translate-x-full')">
+<td class="p-space-md" onclick="event.stopPropagation()">
+<input class="w-4 h-4 rounded bg-surface-container-lowest accent-primary cursor-pointer" type="checkbox"/>
+</td>
+<td class="p-space-md font-mono text-primary font-semibold">SD-4081</td>
+<td class="p-space-md">
+<div class="flex flex-col max-w-md">
+<span class="font-headline-sm text-headline-sm text-on-surface truncate group-hover:text-primary transition-colors">Figma Enterprise License seat upgrade request</span>
+<span class="text-on-surface-variant text-[11px] truncate">Annual design team expansion seat allocation and billing code assignment</span>
+</div>
+</td>
+<td class="p-space-md">
+<span class="px-space-xs py-space-2xs bg-surface-container-high text-on-surface rounded font-label-sm text-label-sm">Design / IT</span>
+</td>
+<td class="p-space-md">
+<div class="flex items-center gap-space-xs">
+<div class="w-6 h-6 rounded-full bg-surface-container-highest text-on-surface flex items-center justify-center font-label-sm text-[10px]">CL</div>
+<span class="text-on-surface truncate">Chloe Lin</span>
+</div>
+</td>
+<td class="p-space-md">
+<div class="flex items-center gap-space-xs">
+<div class="w-6 h-6 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center font-label-sm text-[10px]">SJ</div>
+<span class="text-on-surface truncate">Sarah Jenkins</span>
+</div>
+</td>
+<td class="p-space-md">
+<span class="inline-flex items-center px-space-xs py-space-2xs rounded bg-surface-container-high text-on-surface-variant font-label-sm text-label-sm">Low</span>
+</td>
+<td class="p-space-md">
+<span class="px-space-xs py-space-2xs rounded bg-tertiary-container/30 text-tertiary font-label-sm text-label-sm">Resolved</span>
+</td>
+<td class="p-space-md">
+<div class="flex items-center gap-space-xs text-tertiary font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[16px]">check_circle</span>
+<span>Met Target</span>
+</div>
+</td>
+<td class="p-space-md text-right" onclick="event.stopPropagation()">
+<button class="p-space-2xs text-on-surface-variant hover:text-on-surface rounded hover:bg-surface-container-highest" type="button">
+<span class="material-symbols-outlined text-[18px]">more_horiz</span>
+</button>
+</td>
+</tr>
+<tr class="hover:bg-surface-container cursor-pointer transition-colors group" onclick="document.getElementById('ticket-drawer').classList.remove('translate-x-full')">
+<td class="p-space-md" onclick="event.stopPropagation()">
+<input class="w-4 h-4 rounded bg-surface-container-lowest accent-primary cursor-pointer" type="checkbox"/>
+</td>
+<td class="p-space-md font-mono text-primary font-semibold">SD-4079</td>
+<td class="p-space-md">
+<div class="flex flex-col max-w-md">
+<span class="font-headline-sm text-headline-sm text-on-surface truncate group-hover:text-primary transition-colors">Salesforce SAML SSO Certificate Expiration warning</span>
+<span class="text-on-surface-variant text-[11px] truncate">Primary X.509 token signing cert reaches end of validity in 48 hours</span>
+</div>
+</td>
+<td class="p-space-md">
+<span class="px-space-xs py-space-2xs bg-surface-container-high text-on-surface rounded font-label-sm text-label-sm">IT Ops</span>
+</td>
+<td class="p-space-md">
+<div class="flex items-center gap-space-xs">
+<div class="w-6 h-6 rounded-full bg-error-container text-on-error flex items-center justify-center font-label-sm text-[10px]">SYS</div>
+<span class="text-on-surface truncate">AutoWatch Bot</span>
+</div>
+</td>
+<td class="p-space-md">
+<div class="flex items-center gap-space-xs">
+<img class="w-6 h-6 rounded-full object-cover" data-alt="Business portrait of Nathan Reed, Enterprise Identity Engineer in minimalist office with blue ambient backlight" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB6-SV5uhxwMqtUP3h0gw4yTyve1k7sKpSXYRx16Mo6EBcN5PoCvXMJUXcVMTwU3dBzyliBn9Wys7ny31ObD5qLGbUNOnU21OmwOblcMRuNHCM1g74GFxnN3WqArSpEQYuJS1ZJlM-lROeWopwUOIxxd6XjSk-NodMq8yzteYBA-XiqN8RqvHHMDNzU06q7_JhHZnXuLTmeHniZshiTOCQwr6KFvfWwPqEna8ALRh7V"/>
+<span class="text-on-surface truncate">Nathan Reed</span>
+</div>
+</td>
+<td class="p-space-md">
+<span class="inline-flex items-center gap-space-2xs px-space-xs py-space-2xs rounded bg-error-container/40 text-error font-label-sm text-label-sm">
+<span class="w-1.5 h-1.5 rounded-full bg-error animate-ping"></span>
+<span>Critical</span>
+</span>
+</td>
+<td class="p-space-md">
+<span class="px-space-xs py-space-2xs rounded bg-primary-container/20 text-primary font-label-sm text-label-sm">In Progress</span>
+</td>
+<td class="p-space-md">
+<div class="flex flex-col gap-space-2xs w-36">
+<div class="flex items-center justify-between text-[11px]">
+<span class="text-error font-medium">32m left</span>
+<span class="text-on-surface-variant">88%</span>
+</div>
+<div class="w-full h-1.5 bg-surface-container-high rounded-full overflow-hidden">
+<div class="h-full bg-error rounded-full w-[88%]"></div>
+</div>
+</div>
+</td>
+<td class="p-space-md text-right" onclick="event.stopPropagation()">
+<button class="p-space-2xs text-on-surface-variant hover:text-on-surface rounded hover:bg-surface-container-highest" type="button">
+<span class="material-symbols-outlined text-[18px]">more_horiz</span>
+</button>
+</td>
+</tr>
+<tr class="hover:bg-surface-container cursor-pointer transition-colors group" onclick="document.getElementById('ticket-drawer').classList.remove('translate-x-full')">
+<td class="p-space-md" onclick="event.stopPropagation()">
+<input class="w-4 h-4 rounded bg-surface-container-lowest accent-primary cursor-pointer" type="checkbox"/>
+</td>
+<td class="p-space-md font-mono text-primary font-semibold">SD-4074</td>
+<td class="p-space-md">
+<div class="flex flex-col max-w-md">
+<span class="font-headline-sm text-headline-sm text-on-surface truncate group-hover:text-primary transition-colors">Office 365 Outlook calendar synchronization glitch</span>
+<span class="text-on-surface-variant text-[11px] truncate">Shared meeting rooms double-booking across APAC time zones</span>
+</div>
+</td>
+<td class="p-space-md">
+<span class="px-space-xs py-space-2xs bg-surface-container-high text-on-surface rounded font-label-sm text-label-sm">Support</span>
+</td>
+<td class="p-space-md">
+<div class="flex items-center gap-space-xs">
+<div class="w-6 h-6 rounded-full bg-surface-container-highest text-on-surface flex items-center justify-center font-label-sm text-[10px]">TL</div>
+<span class="text-on-surface truncate">Tariq Low</span>
+</div>
+</td>
+<td class="p-space-md">
+<div class="flex items-center gap-space-xs">
+<div class="w-6 h-6 rounded-full bg-secondary-container text-on-secondary-container flex items-center justify-center font-label-sm text-[10px]">SJ</div>
+<span class="text-on-surface truncate">Sarah Jenkins</span>
+</div>
+</td>
+<td class="p-space-md">
+<span class="inline-flex items-center px-space-xs py-space-2xs rounded bg-surface-container-high text-on-surface-variant font-label-sm text-label-sm">Medium</span>
+</td>
+<td class="p-space-md">
+<span class="px-space-xs py-space-2xs rounded bg-tertiary-container/30 text-tertiary font-label-sm text-label-sm">Resolved</span>
+</td>
+<td class="p-space-md">
+<div class="flex items-center gap-space-xs text-tertiary font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[16px]">check_circle</span>
+<span>Met Target</span>
+</div>
+</td>
+<td class="p-space-md text-right" onclick="event.stopPropagation()">
+<button class="p-space-2xs text-on-surface-variant hover:text-on-surface rounded hover:bg-surface-container-highest" type="button">
+<span class="material-symbols-outlined text-[18px]">more_horiz</span>
+</button>
+</td>
+</tr>
+<tr class="hover:bg-surface-container cursor-pointer transition-colors group" onclick="document.getElementById('ticket-drawer').classList.remove('translate-x-full')">
+<td class="p-space-md" onclick="event.stopPropagation()">
+<input class="w-4 h-4 rounded bg-surface-container-lowest accent-primary cursor-pointer" type="checkbox"/>
+</td>
+<td class="p-space-md font-mono text-primary font-semibold">SD-4070</td>
+<td class="p-space-md">
+<div class="flex flex-col max-w-md">
+<span class="font-headline-sm text-headline-sm text-on-surface truncate group-hover:text-primary transition-colors">PostgreSQL read replica latency alert</span>
+<span class="text-on-surface-variant text-[11px] truncate">Replication lag surpassed 120 seconds on reporting database cluster</span>
+</div>
+</td>
+<td class="p-space-md">
+<span class="px-space-xs py-space-2xs bg-surface-container-high text-on-surface rounded font-label-sm text-label-sm">Database Ops</span>
+</td>
+<td class="p-space-md">
+<div class="flex items-center gap-space-xs">
+<div class="w-6 h-6 rounded-full bg-error-container text-on-error flex items-center justify-center font-label-sm text-[10px]">MON</div>
+<span class="text-on-surface truncate">DataDog Alert</span>
+</div>
+</td>
+<td class="p-space-md">
+<div class="flex items-center gap-space-xs">
+<div class="w-6 h-6 rounded-full bg-surface-container-highest text-on-surface flex items-center justify-center font-label-sm text-[10px]">KM</div>
+<span class="text-on-surface truncate">Kenji Mori</span>
+</div>
+</td>
+<td class="p-space-md">
+<span class="inline-flex items-center px-space-xs py-space-2xs rounded bg-surface-variant text-error font-label-sm text-label-sm font-semibold">High</span>
+</td>
+<td class="p-space-md">
+<span class="px-space-xs py-space-2xs rounded bg-surface-variant text-on-surface font-label-sm text-label-sm">Open</span>
+</td>
+<td class="p-space-md">
+<div class="flex flex-col gap-space-2xs w-36">
+<div class="flex items-center justify-between text-[11px]">
+<span class="text-primary">3h 10m</span>
+<span class="text-on-surface-variant">42%</span>
+</div>
+<div class="w-full h-1.5 bg-surface-container-high rounded-full overflow-hidden">
+<div class="h-full bg-primary rounded-full w-[42%]"></div>
+</div>
+</div>
+</td>
+<td class="p-space-md text-right" onclick="event.stopPropagation()">
+<button class="p-space-2xs text-on-surface-variant hover:text-on-surface rounded hover:bg-surface-container-highest" type="button">
+<span class="material-symbols-outlined text-[18px]">more_horiz</span>
+</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="flex flex-col md:flex-row items-center justify-between gap-space-md pt-space-xs pb-space-lg text-on-surface-variant font-body-sm text-body-sm">
+<div class="flex items-center gap-space-sm">
+<span>Showing 1 to 7 of 1,284 tickets</span>
+<div class="flex items-center gap-space-xs ml-space-md">
+<span>Rows per page:</span>
+<select class="bg-surface-container-low text-on-surface px-space-sm py-space-2xs rounded focus:outline-none">
+<option>10</option>
+<option>25</option>
+<option>50</option>
+<option>100</option>
+</select>
+</div>
+</div>
+<div class="flex items-center gap-space-xs">
+<button class="px-space-sm py-space-2xs bg-surface-container-low hover:bg-surface-container text-on-surface rounded transition-colors disabled:opacity-40" disabled="" type="button">
+<span class="material-symbols-outlined text-[16px] align-middle">chevron_left</span>
+<span>Previous</span>
+</button>
+<button class="px-space-sm py-space-2xs bg-primary text-on-primary rounded font-semibold" type="button">1</button>
+<button class="px-space-sm py-space-2xs bg-surface-container-low hover:bg-surface-container text-on-surface rounded" type="button">2</button>
+<button class="px-space-sm py-space-2xs bg-surface-container-low hover:bg-surface-container text-on-surface rounded" type="button">3</button>
+<span class="px-space-2xs">...</span>
+<button class="px-space-sm py-space-2xs bg-surface-container-low hover:bg-surface-container text-on-surface rounded" type="button">129</button>
+<button class="px-space-sm py-space-2xs bg-surface-container-low hover:bg-surface-container text-on-surface rounded transition-colors" type="button">
+<span>Next</span>
+<span class="material-symbols-outlined text-[16px] align-middle">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+<div class="fixed inset-y-0 right-0 w-full max-w-2xl bg-surface-container-low shadow-2xl z-50 transform translate-x-full transition-transform duration-300 ease-in-out flex flex-col" id="ticket-drawer">
+<div class="h-16 px-space-xl bg-surface-container flex items-center justify-between">
+<div class="flex items-center gap-space-sm">
+<span class="font-mono text-primary font-bold text-headline-sm">SD-4092</span>
+<span class="inline-flex items-center gap-space-2xs px-space-xs py-space-2xs rounded bg-error-container text-on-error font-label-sm text-label-sm">
+<span class="w-1.5 h-1.5 rounded-full bg-error animate-ping"></span>
+<span>Critical P1</span>
+</span>
+</div>
+<div class="flex items-center gap-space-xs">
+<button class="p-space-xs text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high rounded transition-colors" title="Copy Ticket Link" type="button">
+<span class="material-symbols-outlined text-[18px]">link</span>
+</button>
+<button class="p-space-xs text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high rounded transition-colors" title="Open Fullscreen" type="button">
+<span class="material-symbols-outlined text-[18px]">open_in_new</span>
+</button>
+<button class="p-space-xs text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high rounded transition-colors" onclick="document.getElementById('ticket-drawer').classList.add('translate-x-full')" type="button">
+<span class="material-symbols-outlined text-[20px]">close</span>
+</button>
+</div>
+</div>
+<div class="flex-1 overflow-y-auto p-space-xl flex flex-col gap-space-xl">
+<div class="flex flex-col gap-space-xs">
+<div class="flex items-center gap-space-xs font-body-sm text-body-sm text-on-surface-variant">
+<span>Infrastructure</span>
+<span>/</span>
+<span>DNS &amp; Routing</span>
+<span>/</span>
+<span class="text-primary font-medium">Incident Review</span>
+</div>
+<h2 class="font-headline-lg text-headline-lg text-on-surface font-semibold">Global AWS Route53 DNS propagation failure</h2>
+<div class="flex items-center gap-space-md text-on-surface-variant font-body-sm text-body-sm pt-space-xs">
+<span>Opened 2 hours ago by <strong class="text-on-surface">Marcus Vance</strong></span>
+<span>•</span>
+<span class="flex items-center gap-space-2xs text-error font-medium">
+<span class="material-symbols-outlined text-[16px]">timer</span>
+<span>18m until Tier 1 SLA breach</span>
+</span>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-space-md">
+<div class="bg-surface-container p-space-md rounded-lg flex items-center gap-space-md">
+<img class="w-10 h-10 rounded-full object-cover" data-alt="Marcus Vance site reliability engineer thumbnail corporate badge photo with headset" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDe8okVBt8sonqfDAQHUDf79dAsZzQNEqBuWS1dmhdByVhbBlD4Q2gvM1v6REFSv0f0a41i7L5zTPMi5NlzKGWNLfXDDSeFqJuETFZCiO2sk4Y2XeBpFJHbzDr1F2M6z0mb3MlAUqwNaJvN3lKpVWnTFZ9MjgelgcwdphSme3_pu4bv18-xeNw06iJ-cBzIbqFwJNo67WljTQVpnN8TN8syjqvoq9mrjgH6ya1UBmmV"/>
+<div class="flex flex-col min-w-0">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase">Requester</span>
+<span class="font-label-md text-label-md text-on-surface font-semibold truncate">Marcus Vance</span>
+<span class="font-body-sm text-body-sm text-outline truncate">DevOps Lead</span>
+</div>
+</div>
+<div class="bg-surface-container p-space-md rounded-lg flex items-center gap-space-md">
+<img class="w-10 h-10 rounded-full object-cover" data-alt="Alex Mercer cloud architect avatar with technical studio background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBsup449eVxXGnqELDk_IKs5kz5HE7Ld_nABA28x-tJe-mADcCacjdkyJ_j5g9DYK2epo_IJqKufxjaitbV3pN43sStZXwNlVzxxiJ8AK6DOGfQOFw9KIhvHDQPK24Iv7DHo5wfX5hGXmpsmguSVseETdDd1MsjVDhCQOgNXUMNVHnDxkjNnBGIbwdLh_t6JuW2WAUyarMZd3FVcb5aOMHFANMCDbYfkcmdg7ljqL36"/>
+<div class="flex flex-col min-w-0">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase">Assignee</span>
+<span class="font-label-md text-label-md text-on-surface font-semibold truncate">Alex Mercer</span>
+<span class="font-body-sm text-body-sm text-outline truncate">Cloud Infrastructure</span>
+</div>
+</div>
+</div>
+<div class="bg-gradient-to-br from-secondary-container/20 via-surface-container to-surface-container p-space-lg rounded-lg shadow-sm flex flex-col gap-space-md">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-[20px] text-secondary">auto_awesome</span>
+<span class="font-headline-sm text-headline-sm text-on-surface font-semibold">AI Automated Triage &amp; Root Cause</span>
+</div>
+<span class="px-space-xs py-space-2xs bg-secondary-container text-on-secondary-container font-label-sm text-label-sm rounded font-bold">98% Confidence</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface leading-relaxed">
+          Synthetic health checks indicate cross-region NS record mismatch on zone <code class="bg-surface-container-highest px-space-xs py-space-2xs rounded font-mono text-primary text-[12px]">corp.internal.aws</code> following commit <code>#df94a1b</code>. Traffic shifts to eu-central are generating 504 Gateway Timeouts.
+        </p>
+<div class="flex flex-col gap-space-xs bg-surface-container-lowest/60 p-space-md rounded">
+<span class="font-label-sm text-label-sm text-secondary font-semibold uppercase tracking-wider">Suggested Remediation:</span>
+<ol class="list-decimal list-inside font-body-sm text-body-sm text-on-surface space-y-1">
+<li>Rollback Terraform state module <span class="font-mono text-primary">aws_route53_zone.primary</span> to v4.12.0</li>
+<li>Flush Edge Resolver caches in CloudFront distribution <span class="font-mono text-primary">E288XZ19B</span></li>
+<li>Execute automated smoke test suite for edge ingress</li>
+</ol>
+</div>
+<div class="flex items-center gap-space-sm pt-space-2xs">
+<button class="px-space-md py-space-xs bg-secondary hover:bg-secondary-fixed text-on-secondary font-label-md text-label-md rounded flex items-center gap-space-xs transition-colors shadow" type="button">
+<span class="material-symbols-outlined text-[16px]">play_arrow</span>
+<span>Execute AI Rollback Runbook</span>
+</button>
+<button class="px-space-md py-space-xs bg-surface-container-high hover:bg-surface-container-highest text-on-surface font-label-md text-label-md rounded transition-colors" type="button">
+            Analyze Correlated Traces
+          </button>
+</div>
+</div>
+<div class="flex flex-col gap-space-sm">
+<span class="font-headline-sm text-headline-sm text-on-surface font-semibold">Incident Details</span>
+<div class="bg-surface-container p-space-md rounded-lg font-body-md text-body-md text-on-surface-variant leading-relaxed space-y-2">
+<p>
+            At 14:02 UTC, automated health monitors tripped across us-east-1 and us-west-2. Outbound internal microservice requests could not resolve canonical DNS names, cascading into auth service timeouts.
+          </p>
+<p class="font-mono text-[12px] bg-surface-container-lowest p-space-sm rounded text-primary">
+            ERROR: Failed to resolve host 'internal-api.service.consul': NXDOMAIN response from 169.254.169.253:53
+          </p>
+</div>
+</div>
+<div class="flex flex-col gap-space-md">
+<span class="font-headline-sm text-headline-sm text-on-surface font-semibold">Activity Timeline</span>
+<div class="flex flex-col gap-space-lg relative before:absolute before:left-3 before:top-2 before:bottom-2 before:w-0.5 before:bg-surface-container-highest">
+<div class="flex items-start gap-space-md relative">
+<div class="w-6 h-6 rounded-full bg-error-container text-on-error flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[14px]">warning</span>
+</div>
+<div class="flex flex-col gap-space-2xs">
+<div class="flex items-center gap-space-xs text-body-sm text-body-sm">
+<span class="font-semibold text-on-surface">DataDog Synthetics</span>
+<span class="text-outline">triggered incident</span>
+<span class="text-on-surface-variant">14:02 UTC</span>
+</div>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Latency monitor breached &gt; 500ms threshold for 3 consecutive intervals.</span>
+</div>
+</div>
+<div class="flex items-start gap-space-md relative">
+<div class="w-6 h-6 rounded-full bg-secondary-container text-on-secondary-container flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[14px]">auto_awesome</span>
+</div>
+<div class="flex flex-col gap-space-2xs">
+<div class="flex items-center gap-space-xs text-body-sm text-body-sm">
+<span class="font-semibold text-on-surface">SmartDesk AI</span>
+<span class="text-outline">automated assessment</span>
+<span class="text-on-surface-variant">14:04 UTC</span>
+</div>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Assigned to Alex Mercer based on Git blame analysis of Route53 changes.</span>
+</div>
+</div>
+<div class="flex items-start gap-space-md relative">
+<div class="w-6 h-6 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[14px]">chat</span>
+</div>
+<div class="flex flex-col gap-space-2xs w-full bg-surface-container p-space-md rounded-lg">
+<div class="flex items-center justify-between">
+<span class="font-semibold text-on-surface font-label-md text-label-md">Alex Mercer</span>
+<span class="text-outline font-label-sm text-label-sm">14:15 UTC</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+                I'm reviewing the Terraform delta right now. Running dry-run validation on the rollback target.
+              </p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="p-space-lg bg-surface-container flex flex-col gap-space-sm">
+<div class="flex items-center gap-space-sm">
+<input class="w-full bg-surface-container-lowest text-on-surface placeholder:text-outline font-body-sm text-body-sm px-space-md py-space-sm rounded focus:outline-none focus:ring-1 focus:ring-primary" placeholder="Post an internal update or press @ to mention..." type="text"/>
+<button class="p-space-sm bg-primary hover:bg-primary-container text-on-primary rounded transition-colors shrink-0" type="button">
+<span class="material-symbols-outlined text-[18px]">send</span>
+</button>
+</div>
+<div class="flex items-center justify-between text-on-surface-variant font-label-sm text-label-sm pt-space-2xs">
+<div class="flex items-center gap-space-md">
+<button class="hover:text-on-surface flex items-center gap-space-2xs" type="button"><span class="material-symbols-outlined text-[14px]">attach_file</span> Attach log</button>
+<button class="hover:text-on-surface flex items-center gap-space-2xs" type="button"><span class="material-symbols-outlined text-[14px]">bolt</span> Trigger Webhook</button>
+</div>
+<span>ESC to close pane</span>
+</div>
+</div>
+</div>
+</div></main></div></body></html>

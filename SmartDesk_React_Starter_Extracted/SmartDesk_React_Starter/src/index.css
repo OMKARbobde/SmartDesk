@@ -1,0 +1,70 @@
+@import "tailwindcss";
+
+@layer base {
+  body {
+    background-color: #0a0e16;
+    color: #f1f5f9;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+}
+
+/* A restrained light theme preserves the same layout and blue accent. */
+:root[data-theme="light"] body { background-color: #f1f5f9; color: #0f172a; }
+:root[data-theme="light"] [class*="bg-[#0a0e16]"],
+:root[data-theme="light"] [class*="bg-[#0f131c]"],
+:root[data-theme="light"] [class*="bg-black"] { background-color: #f8fafc !important; }
+:root[data-theme="light"] [class*="bg-[#181c24]"],
+:root[data-theme="light"] [class*="bg-[#202634]"] { background-color: #e2e8f0 !important; }
+:root[data-theme="light"] [class*="bg-purple-950"],
+:root[data-theme="light"] [class*="bg-purple-900"] { background-color: #f3e8ff !important; }
+:root[data-theme="light"] [class*="bg-blue-500/10"] { background-color: #dbeafe !important; }
+:root[data-theme="light"] [class*="bg-emerald-500/10"] { background-color: #d1fae5 !important; }
+:root[data-theme="light"] [class*="bg-amber-500/10"] { background-color: #fef3c7 !important; }
+:root[data-theme="light"] [class*="bg-rose-500/10"] { background-color: #ffe4e6 !important; }
+:root[data-theme="light"] [class*="bg-purple-500/10"] { background-color: #f3e8ff !important; }
+:root[data-theme="light"] [class*="border-[#1e2638]"] { border-color: #cbd5e1 !important; }
+:root[data-theme="light"] [class*="border-purple-800"],
+:root[data-theme="light"] [class*="border-purple-700"] { border-color: #c4b5fd !important; }
+:root[data-theme="light"] [class*="text-blue-300"],
+:root[data-theme="light"] [class*="text-blue-400"] { color: #1d4ed8 !important; }
+:root[data-theme="light"] [class*="text-emerald-300"],
+:root[data-theme="light"] [class*="text-emerald-400"] { color: #047857 !important; }
+:root[data-theme="light"] [class*="text-amber-300"],
+:root[data-theme="light"] [class*="text-amber-400"] { color: #b45309 !important; }
+:root[data-theme="light"] [class*="text-rose-300"],
+:root[data-theme="light"] [class*="text-rose-400"] { color: #be123c !important; }
+:root[data-theme="light"] [class*="text-purple-200"],
+:root[data-theme="light"] [class*="text-purple-300"],
+:root[data-theme="light"] [class*="text-purple-400"] { color: #6b21a8 !important; }
+:root[data-theme="light"] [class*="text-white"],
+:root[data-theme="light"] [class*="text-slate-200"],
+:root[data-theme="light"] [class*="text-slate-300"] { color: #172033 !important; }
+:root[data-theme="light"] [class*="text-slate-400"],
+:root[data-theme="light"] [class*="text-slate-500"] { color: #475569 !important; }
+:root[data-theme="light"] input,
+:root[data-theme="light"] select,
+:root[data-theme="light"] textarea { color-scheme: light; }
+
+/* Keep muted captions readable against the dark card surfaces. */
+:root:not([data-theme="light"]) [class*="text-slate-500"],
+:root:not([data-theme="light"]) [class*="text-slate-600"] { color: #7f91a8 !important; }
+
+/* Custom scrollbars for dense data grids */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #0f131c;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #1e2638;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #334155;
+}
