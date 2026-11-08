@@ -17,6 +17,12 @@ llm_env_25/
 # SQLite database
 *.sqlite3
 *.sqlite3-journal
+*.sqlite3-wal
+*.sqlite3-shm
+*.sqlite-wal
+*.sqlite-shm
+*.db-wal
+*.db-shm
 *.db
 *.sqlite
 *.bak
@@ -27,6 +33,14 @@ llm_env_25/
 # Excluded alternate/backup frontend trees
 /frontend/
 /frontend_backup/
+
+# Local backup and browser-staging artifacts
+/backup/
+/backups/
+/_private_backups/
+/_browser_staging/
+/browser-staging/
+*.trace.zip
 
 # Environment variables and secrets
 .env
