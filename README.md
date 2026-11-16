@@ -21,7 +21,9 @@ Built with **Django REST Framework** and **React**, SmartDesk provides a central
 - Allow employees to accept or complete their own assignments.
 - Enforce role-based assignment permissions.
 
-### 🏢 Department Analytics
+### 🏢 Department Management & Analytics
+- Allow ADMIN users to create, edit, activate and deactivate departments.
+- Keep deactivated departments and their ticket/employee references intact.
 - Monitor ticket distribution across departments.
 - Analyze ticket status, priority, and workload.
 - Filter analytics by department and date.
@@ -36,9 +38,14 @@ Built with **Django REST Framework** and **React**, SmartDesk provides a central
 *Note: The current implementation uses local rule-based heuristics, not a trained machine-learning model or external AI service.*
 
 ### 📋 Audit Logs
-- Record ticket and assignment events.
+- Record ticket, assignment, department, archive and restore events.
 - Track archive and restore activities.
 - Provide administrators with filtering and pagination for audit records.
+
+### 🔔 In-App Notifications
+- Persist notifications for relevant ticket and assignment events.
+- Show recipient-scoped notifications and unread counts.
+- Mark individual or all notifications as read.
 
 ### 🔐 Authentication & Authorization
 - Session-based authentication.
@@ -78,6 +85,7 @@ SmartDesk/
 │   ├── assignment/        # Assignment management
 │   ├── auditlog/          # Audit event tracking
 │   ├── departments/       # Department APIs and analytics
+│   ├── notifications/     # Persistent in-app notifications
 │   ├── smartdesk/         # Django settings and URLs
 │   ├── tickets/           # Ticket management
 │   └── manage.py
@@ -138,10 +146,10 @@ Windows PowerShell:
 Install the backend packages:
 
 ```bash
-pip install Django==4.2.30 djangorestframework==3.16.1 django-cors-headers==4.9.0 requests==2.32.5
+python -m pip install -r requirements.txt
 ```
 
-**Note:** These are the versions observed in the development environment. A pinned backend dependency manifest is not yet included in the repository.
+**Note:** The repository includes the full pinned backend requirements manifest as UTF-8 text. Its 151 dependency entries are preserved. Pip parsed the converted manifest without installing packages; a clean deployment environment has not yet been tested against it.
 
 ### 3. Configure Environment Variables
 
@@ -234,7 +242,8 @@ The backend exposes REST APIs for authentication, ticket management, workforce, 
 | Archived Tickets | GET | `/api/tickets/archived/` |
 | Archive Ticket | POST | `/api/tickets/{pk}/archive/` |
 | Restore Ticket | POST | `/api/tickets/{pk}/restore/` |
-| Departments | GET | `/api/departments/` |
+| Departments | GET, POST | `/api/departments/` |
+| Department Details | PATCH | `/api/departments/{id}/` |
 | Employees | GET | `/api/employees/` |
 | Employee Details | GET, PATCH | `/api/employees/{id}/` |
 | Assignments | GET | `/api/assignments/` |
@@ -243,6 +252,10 @@ The backend exposes REST APIs for authentication, ticket management, workforce, 
 | Department Analytics | GET | `/api/analytics/departments/` |
 | AI Ticket Analysis | POST | `/api/ai/analyze/{id}/` |
 | Audit Logs | GET | `/api/audit-logs/` |
+| Notifications | GET | `/api/notifications/` |
+| Unread Notification Count | GET | `/api/notifications/unread-count/` |
+| Mark Notification Read | POST | `/api/notifications/{id}/read/` |
+| Mark All Notifications Read | POST | `/api/notifications/mark-all-read/` |
 
 API responses use standardized data/meta and error envelopes. Pagination is one-based, with a default page size of 20 and a maximum of 100.
 
@@ -258,6 +271,24 @@ API responses use standardized data/meta and error envelopes. Pagination is one-
 
 The `.env.example` file contains placeholders. Django does not automatically load `.env` files in the current implementation, so environment variables must be supplied by the runtime environment.
 
+## Verification
+
+Backend checks and tests:
+
+```bash
+cd backend
+python manage.py check
+python manage.py test
+```
+
+Frontend tests use Node's built-in test runner (there is no `npm test` script):
+
+```bash
+cd SmartDesk_React_Starter_Extracted/SmartDesk_React_Starter
+node --test src/api/client.test.js src/api/resources.test.js src/pages/settings/auditLogFormatters.test.js
+npm run build
+```
+
 ---
 
 ## Current Implementation Status
@@ -270,10 +301,11 @@ The `.env.example` file contains placeholders. Django does not automatically loa
 | Assignment Management | Implemented |
 | AI Ticket Analysis | Heuristic-based |
 | Department Analytics | Implemented |
-| Audit Logging | Implemented |
+| Audit Logging, including department events | Implemented |
 | External AI Integration | Not Implemented |
 | Runbook Automation | Not Implemented |
-| Notifications API | Not Implemented |
+| Notifications API and header panel | Implemented |
+| Department Management | Implemented; ADMIN only |
 
 ### Known Limitations
 
@@ -282,8 +314,9 @@ The `.env.example` file contains placeholders. Django does not automatically loa
 - Runbook dispatch is unavailable.
 - Reliable resolution-time, SLA, and MTTR metrics are not supported by the available stored data.
 - Settings preferences are currently local browser preferences or demo controls.
-- Complete archive and restore workflows are not exposed in the frontend.
-- Backend dependency versions still need a dedicated dependency manifest.
+- The full pinned backend requirements file is preserved, but it is a broad environment snapshot rather than a reviewed minimal deployment set. Clean-environment installation has not been verified.
+- Production-specific Django settings are not configured: `DEBUG` is enabled, `ALLOWED_HOSTS` is empty, HTTPS/HSTS and secure cookie flags are unset, and `STATIC_ROOT` is not configured.
+- SQLite is suitable for development and small single-writer deployments; higher write concurrency should use a production database such as PostgreSQL after a separately tested migration plan.
 
 ---
 
@@ -293,11 +326,18 @@ Potential areas for further development include:
 
 - Integration with an external AI service or trained ML model.
 - Automated runbook execution.
-- Notification management and persistence.
 - SLA monitoring and resolution-time analytics.
 - Improved administrative settings and role management.
 - Reproducible backend dependency management.
 - Automated testing and deployment workflows.
+
+### Release Configuration
+
+Before deploying, provide production values for `DJANGO_SECRET_KEY`, `ALLOWED_HOSTS`, the CORS and CSRF trusted origins, and `VITE_API_BASE_URL`. Configure HTTPS redirects, HSTS, secure session/CSRF cookies, and a static-file serving strategy for the hosting platform. Django does not load `.env` automatically; inject variables through the deployment environment.
+
+### SQLite Backup and Recovery
+
+Create backups outside the repository with SQLite's online backup API and unique filenames. Stop application writes before a planned restore. Verify backups with `PRAGMA integrity_check`, `PRAGMA foreign_key_check`, and critical table counts. For recovery, restore the backup to a separate candidate file first, verify it, and only then perform an approved maintenance-window cutover while retaining the previous database file. Do not delete migration history or roll back by removing migration records.
 
 ---
 

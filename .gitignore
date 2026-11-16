@@ -51,6 +51,9 @@ llm_env_25/
 *.p12
 *.pfx
 
+# Local duplicate dependency-manifest backup (keep the canonical requirements.txt)
+/backend/requirements_backup.txt
+
 # Node
 node_modules/
 

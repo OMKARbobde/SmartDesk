@@ -5,6 +5,7 @@ import { AIAnalysisPage } from './pages/ai-analysis/AIAnalysisPage';
 import { WorkforcePage } from './pages/workforce/WorkforcePage';
 import { AnalyticsPage } from './pages/analytics/AnalyticsPage';
 import { SettingsPage } from './pages/settings/SettingsPage';
+import { DepartmentManagementPage } from './pages/departments/DepartmentManagementPage';
 import { LoginPage } from './pages/auth/LoginPage';
 import { AuthProvider } from './context/AuthContext';
 import { useAuth } from './context/AuthContext';
@@ -21,6 +22,12 @@ function Protected({ children }) {
   return <RequireSession>{children}</RequireSession>;
 }
 
+function RequireAdmin({ children }) {
+  const { user } = useAuth();
+  if (user?.role !== 'ADMIN') return <Navigate to="/" replace />;
+  return children;
+}
+
 export default function App() {
   return (
     <AuthProvider><BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
@@ -31,6 +38,7 @@ export default function App() {
         <Route path="/workforce" element={<Protected><WorkforcePage /></Protected>} />
         <Route path="/analytics" element={<Protected><AnalyticsPage /></Protected>} />
         <Route path="/settings" element={<Protected><SettingsPage /></Protected>} />
+        <Route path="/departments" element={<Protected><RequireAdmin><DepartmentManagementPage /></RequireAdmin></Protected>} />
         <Route path="/login" element={<LoginPage />} />
       </Routes>
     </BrowserRouter></AuthProvider>

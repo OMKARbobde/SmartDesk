@@ -1,4 +1,11 @@
-# SmartDesk frontend audit and completion report
+# Historical SmartDesk frontend audit (superseded)
+
+> This report records an earlier mock-data frontend audit and is retained as a
+> historical artifact. It predates Django session/API integration, department
+> management, persistent audit logs and notifications, and the archive/restore
+> UI. Its PASS statements and mock-data descriptions are not current release
+> status. Use the repository-root `SMARTDESK_PROJECT_SUMMARY.txt` and current
+> source/tests for current implementation and verification results.
 
 Scope: `SmartDesk_React_Starter_Extracted/SmartDesk_React_Starter`. The Django backend was not changed. All service-dependent behavior is explicitly presented as sample data or a local simulation.
 

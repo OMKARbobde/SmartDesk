@@ -278,6 +278,19 @@ class AuditEventApiTests(TestCase):
             event_type="ASSIGNMENT_COMPLETED", assignment=current, actor=self.other_employee_user
         ).exists())
 
+        self.authenticate(self.admin_user)
+        logs = self.client.get(f"/api/audit-logs/?ticket={self.ticket.pk}")
+        self.assertEqual(logs.status_code, 200)
+        self.assertEqual(
+            {event["event_type"] for event in logs.json()["data"]},
+            {
+                "ASSIGNMENT_CREATED",
+                "ASSIGNMENT_REASSIGNED",
+                "ASSIGNMENT_ACCEPTED",
+                "ASSIGNMENT_COMPLETED",
+            },
+        )
+
     def test_archive_restore_and_repeated_actions_are_idempotent_in_audit(self):
         self.authenticate(self.agent)
         archived = self.client.post(f"/api/tickets/{self.ticket.pk}/archive/", {}, format="json")
@@ -430,3 +443,123 @@ class AuditEventAtomicityTests(TestCase):
         previous.refresh_from_db()
         self.assertEqual(previous.status, "ASSIGNED")
         self.assertEqual(AuditEvent.objects.count(), 0)
+
+
+class DepartmentAuditEventTests(TestCase):
+    def setUp(self):
+        self.admin = User.objects.create_user("department-audit-admin", password="test-pass", role="ADMIN")
+        self.agent = User.objects.create_user("department-audit-agent", password="test-pass", role="AGENT")
+        self.employee = User.objects.create_user("department-audit-employee", password="test-pass", role="EMPLOYEE")
+        self.client = APIClient()
+        self.client.force_authenticate(self.admin)
+
+    def create_department(self, **overrides):
+        payload = {
+            "name": "Audit Operations",
+            "code": "AUDOPS",
+            "description": "Private description must not enter the audit log.",
+        }
+        payload.update(overrides)
+        return self.client.post("/api/departments/", payload, format="json")
+
+    def test_department_creation_event_uses_safe_details(self):
+        response = self.create_department()
+        self.assertEqual(response.status_code, 201)
+        department_id = response.json()["data"]["id"]
+        event = AuditEvent.objects.get(event_type="DEPARTMENT_CREATED")
+        self.assertEqual(event.actor_id, self.admin.pk)
+        self.assertEqual(event.details, {
+            "department_id": department_id,
+            "changed_fields": ["code", "description", "name"],
+            "is_active": True,
+        })
+        self.assertNotIn("Private description", json.dumps(event.details))
+
+    def test_update_and_activation_events_cover_all_department_changes(self):
+        department = Department.objects.create(
+            name="Audit Before", code="AUDBEFORE", description="Do not copy this text"
+        )
+        response = self.client.patch(
+            f"/api/departments/{department.pk}/",
+            {"name": "Audit After", "code": "AUDAFTER", "description": "Changed private text"},
+            format="json",
+        )
+        self.assertEqual(response.status_code, 200)
+        update_event = AuditEvent.objects.get(event_type="DEPARTMENT_UPDATED")
+        self.assertEqual(update_event.details, {
+            "department_id": department.pk,
+            "changed_fields": ["name", "code", "description"],
+        })
+        self.assertNotIn("Changed private text", json.dumps(update_event.details))
+
+        response = self.client.patch(
+            f"/api/departments/{department.pk}/", {"is_active": False}, format="json"
+        )
+        self.assertEqual(response.status_code, 200)
+        response = self.client.patch(
+            f"/api/departments/{department.pk}/", {"is_active": True}, format="json"
+        )
+        self.assertEqual(response.status_code, 200)
+
+        self.assertEqual(
+            list(AuditEvent.objects.order_by("id").values_list("event_type", "details")),
+            [
+                ("DEPARTMENT_UPDATED", {"department_id": department.pk, "changed_fields": ["name", "code", "description"]}),
+                ("DEPARTMENT_DEACTIVATED", {"department_id": department.pk, "from": True, "to": False}),
+                ("DEPARTMENT_ACTIVATED", {"department_id": department.pk, "from": False, "to": True}),
+            ],
+        )
+
+    def test_duplicate_and_unchanged_requests_do_not_write_events(self):
+        existing = Department.objects.create(name="Existing Dept", code="EXIST")
+        target = Department.objects.create(name="Update Target", code="UPDTARGET")
+        response = self.create_department(name=existing.name)
+        self.assertEqual(response.status_code, 409)
+        response = self.create_department(code=existing.code)
+        self.assertEqual(response.status_code, 409)
+
+        for payload in ({"name": existing.name}, {"code": existing.code}):
+            response = self.client.patch(
+                f"/api/departments/{target.pk}/", payload, format="json"
+            )
+            self.assertEqual(response.status_code, 409)
+
+        response = self.client.patch(
+            f"/api/departments/{target.pk}/",
+            {"name": target.name, "code": target.code, "is_active": True},
+            format="json",
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(AuditEvent.objects.count(), 0)
+
+    def test_create_and_update_roll_back_if_audit_recording_fails(self):
+        with patch("departments.views.record_department_created", side_effect=RuntimeError("audit failure")):
+            response = self.create_department(name="Rolled Back Department", code="ROLLBACK")
+        self.assertEqual(response.status_code, 500)
+        self.assertEqual(response.json()["error"]["code"], "server_error")
+        self.assertFalse(Department.objects.filter(name="Rolled Back Department").exists())
+        self.assertEqual(AuditEvent.objects.count(), 0)
+
+        department = Department.objects.create(name="Update Before", code="UPDBEFORE")
+        with patch("departments.views.record_department_changes", side_effect=RuntimeError("audit failure")):
+            response = self.client.patch(
+                f"/api/departments/{department.pk}/", {"name": "Update After"}, format="json"
+            )
+        self.assertEqual(response.status_code, 500)
+        self.assertEqual(response.json()["error"]["code"], "server_error")
+        department.refresh_from_db()
+        self.assertEqual(department.name, "Update Before")
+        self.assertEqual(AuditEvent.objects.count(), 0)
+
+    def test_department_event_filter_is_admin_only(self):
+        response = self.create_department()
+        self.assertEqual(response.status_code, 201)
+        response = self.client.get("/api/audit-logs/?event_type=DEPARTMENT_CREATED")
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()["data"][0]["event_type"], "DEPARTMENT_CREATED")
+
+        for user in (self.agent, self.employee):
+            self.client.force_authenticate(user)
+            response = self.client.get("/api/audit-logs/?event_type=DEPARTMENT_CREATED")
+            self.assertEqual(response.status_code, 403)
+            self.assertEqual(response.json()["error"]["code"], "permission_denied")

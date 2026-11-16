@@ -6,6 +6,11 @@ from auditlog.services import (
     record_assignment_reassigned,
     record_assignment_status_change,
 )
+from notifications.services import (
+    notify_assignment_created,
+    notify_assignment_reassigned,
+    notify_assignment_status_changed,
+)
 from smartdesk.api import Conflict
 from tickets.models import Ticket
 from .models import Assignment
@@ -41,8 +46,10 @@ def assign_or_reassign(*, ticket, employee, actor, remarks=None):
             )
             if previous is None:
                 record_assignment_created(actor=actor, assignment=assignment)
+                notify_assignment_created(assignment=assignment, actor=actor)
             else:
                 record_assignment_reassigned(actor=actor, previous=previous, assignment=assignment)
+                notify_assignment_reassigned(previous=previous, assignment=assignment, actor=actor)
             return assignment
     except IntegrityError as exc:
         raise Conflict("The assignment conflicts with the current ticket state.") from exc
@@ -65,6 +72,11 @@ def update_assignment_if_unchanged(assignment, *, actor, **changes):
                 record_assignment_status_change(
                     actor=actor,
                     assignment=assignment,
+                    previous_status=previous_status,
+                )
+                notify_assignment_status_changed(
+                    assignment=assignment,
+                    actor=actor,
                     previous_status=previous_status,
                 )
     except OperationalError as exc:

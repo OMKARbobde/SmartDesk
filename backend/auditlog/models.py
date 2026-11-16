@@ -31,6 +31,10 @@ class AuditEvent(models.Model):
         ("ASSIGNMENT_COMPLETED", "Assignment completed"),
         ("TICKET_ARCHIVED", "Ticket archived"),
         ("TICKET_RESTORED", "Ticket restored"),
+        ("DEPARTMENT_CREATED", "Department created"),
+        ("DEPARTMENT_UPDATED", "Department updated"),
+        ("DEPARTMENT_ACTIVATED", "Department activated"),
+        ("DEPARTMENT_DEACTIVATED", "Department deactivated"),
     )
 
     actor = models.ForeignKey(

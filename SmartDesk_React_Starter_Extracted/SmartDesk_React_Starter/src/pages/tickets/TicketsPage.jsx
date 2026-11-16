@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { ChevronLeft, ChevronRight, Download, Plus, Search, Sparkles, Terminal } from 'lucide-react';
+import { Archive, ChevronLeft, ChevronRight, Download, Plus, RotateCcw, Search, Sparkles, Terminal } from 'lucide-react';
 import { AppShell } from '../../components/layout/AppShell';
 import { ApiState } from '../../components/ui/ApiState';
 import { DataTable } from '../../components/ui/DataTable';
@@ -32,6 +32,8 @@ export function TicketsPage() {
   const navigate = useNavigate();
   const { user } = useAuth();
   const canManageBulk = ['ADMIN', 'AGENT'].includes(user?.role);
+  const canArchive = canManageBulk;
+  const canRestore = user?.role === 'ADMIN';
   const initialStatus = searchParams.get('status');
   const initialDepartment = searchParams.get('department') || searchParams.get('dept') || '';
   const [tickets, setTickets] = useState([]);
@@ -56,6 +58,14 @@ export function TicketsPage() {
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [reloadVersion, setReloadVersion] = useState(0);
+  const [showArchived, setShowArchived] = useState(false);
+  const [archiveConfirmation, setArchiveConfirmation] = useState(null);
+  const [archiveBusy, setArchiveBusy] = useState(false);
+  const archiveBusyRef = useRef(false);
+  const archiveDialogRef = useRef(null);
+  const archiveCancelRef = useRef(null);
+  const archiveTriggerRef = useRef(null);
+  archiveBusyRef.current = archiveBusy;
   const [creating, setCreating] = useState(false);
   const [saving, setSaving] = useState(false);
   const [assigning, setAssigning] = useState(false);
@@ -77,7 +87,8 @@ export function TicketsPage() {
   useEffect(() => {
     let active = true;
     setLoading(true); setError(''); setSelectedIds([]);
-    ticketApi.list({
+    const listTickets = showArchived ? ticketApi.listArchived : ticketApi.list;
+    listTickets({
       page, page_size: pageSize, search: query.trim(), status: statusValue,
       priority: priorityValue, department, ...dateFilters,
     }).then((result) => {
@@ -90,7 +101,7 @@ export function TicketsPage() {
     }).catch((requestError) => { if (active) setError(errorMessage(requestError)); })
       .finally(() => { if (active) setLoading(false); });
     return () => { active = false; };
-  }, [page, pageSize, query, statusValue, priorityValue, department, dateFilters, reloadVersion]);
+  }, [page, pageSize, query, statusValue, priorityValue, department, dateFilters, reloadVersion, showArchived]);
 
   useEffect(() => {
     let active = true;
@@ -100,6 +111,28 @@ export function TicketsPage() {
       .catch((requestError) => { if (active) setActionError(errorMessage(requestError)); });
     return () => { active = false; };
   }, [canManageBulk]);
+
+  useEffect(() => {
+    if (!archiveConfirmation) return undefined;
+    const returnFocus = archiveTriggerRef.current;
+    const onKeyDown = (event) => {
+      if (event.key === 'Escape') {
+        event.preventDefault();
+        if (!archiveBusyRef.current) setArchiveConfirmation(null);
+      }
+      if (event.key !== 'Tab' || !archiveDialogRef.current) return;
+      const focusable = [...archiveDialogRef.current.querySelectorAll('button:not([disabled])')];
+      if (!focusable.length) return;
+      if (event.shiftKey && document.activeElement === focusable[0]) { event.preventDefault(); focusable.at(-1).focus(); }
+      else if (!event.shiftKey && document.activeElement === focusable.at(-1)) { event.preventDefault(); focusable[0].focus(); }
+    };
+    window.requestAnimationFrame(() => archiveCancelRef.current?.focus());
+    window.addEventListener('keydown', onKeyDown);
+    return () => {
+      window.removeEventListener('keydown', onKeyDown);
+      if (returnFocus?.isConnected) returnFocus.focus();
+    };
+  }, [archiveConfirmation]);
 
   function fromTicket(ticket) {
     return { title: ticket.title, description: ticket.description, departmentId: ticket.departmentId == null ? '' : String(ticket.departmentId), priority: ticket.priority, status: ticket.status };
@@ -123,6 +156,24 @@ export function TicketsPage() {
     }
   };
   const refreshList = () => setReloadVersion((version) => version + 1);
+
+  const confirmArchiveAction = async () => {
+    if (!archiveConfirmation) return;
+    setActionError(''); setArchiveBusy(true);
+    try {
+      if (archiveConfirmation.action === 'archive') await ticketApi.archive(archiveConfirmation.ticket.pk);
+      else await ticketApi.restore(archiveConfirmation.ticket.pk);
+      setArchiveConfirmation(null);
+      setSelectedIds((current) => current.filter((id) => id !== archiveConfirmation.ticket.id));
+      if (selectedTicket?.pk === archiveConfirmation.ticket.pk) {
+        detailRequestRef.current += 1;
+        setSelectedTicket(null); setEdit(null); setDetailLoaded(false);
+      }
+      refreshList();
+    } catch (requestError) {
+      setActionError(errorMessage(requestError));
+    } finally { setArchiveBusy(false); }
+  };
 
   const createTicket = async (event) => {
     event.preventDefault(); setActionError(''); setSaving(true);
@@ -200,12 +251,12 @@ export function TicketsPage() {
     { header: 'Department', accessor: 'dept' }, { header: 'Requester', accessor: 'requester' }, { header: 'Assignee', accessor: 'assignee' },
     { header: 'Priority', render: (row) => <PriorityBadge priority={row.priority} /> },
     { header: 'Status', render: (row) => <StatusBadge status={row.status} /> },
-    { header: 'Archive', render: () => <span title="Archive and restore are not connected to this page yet" className="text-xs text-slate-500">Unavailable in this page</span> },
+    { header: showArchived ? 'Restore' : 'Archive', render: (row) => (showArchived ? canRestore : canArchive) ? <button type="button" aria-label={`${showArchived ? 'Restore' : 'Archive'} ticket ${row.id}`} onClick={(event) => { event.stopPropagation(); archiveTriggerRef.current = event.currentTarget; setActionError(''); setArchiveConfirmation({ action: showArchived ? 'restore' : 'archive', ticket: row }); }} className={`inline-flex items-center gap-1 rounded border px-2 py-1 text-xs focus:outline-none focus:ring-2 ${showArchived ? 'border-blue-700/70 text-blue-300 hover:bg-blue-950/40 focus:ring-blue-500' : 'border-amber-700/70 text-amber-300 hover:bg-amber-950/30 focus:ring-amber-500'}`}><span aria-hidden="true">{showArchived ? <RotateCcw className="h-3.5 w-3.5" /> : <Archive className="h-3.5 w-3.5" />}</span>{showArchived ? 'Restore' : 'Archive'}</button> : <span className="text-xs text-slate-500">{showArchived ? 'Admin only' : 'Unavailable'}</span> },
     { header: 'Created', accessor: 'date', cellClassName: 'text-xs text-slate-500' },
   ];
 
   return <AppShell title="Ticket Management" breadcrumb="Platform > Service Management > Tickets">
-    <div className="mb-4 rounded-lg border border-amber-800/50 bg-amber-950/20 p-3 text-xs text-amber-200">Archive and restore endpoints exist in the backend but are not connected to this page yet. This page never permanently deletes tickets.</div>
+    <div className="mb-4 flex flex-wrap items-center justify-between gap-3 rounded-lg border border-slate-700/70 bg-[#181c24] p-3"><p className="text-xs text-slate-300">Archived tickets are retained with their assignment and analysis history. Tickets are never permanently deleted.</p>{canRestore && <PrimaryButton variant="secondary" size="sm" icon={showArchived ? RotateCcw : Archive} onClick={() => { setShowArchived((current) => !current); setPage(1); setSelectedIds([]); setActionError(''); }}>{showArchived ? 'View active tickets' : 'View archived tickets'}</PrimaryButton>}</div>
     <ApiState loading={loading} error={error} onRetry={refreshList}>
       <div className="mb-6 flex flex-col items-center justify-between gap-3 sm:flex-row">
         <div className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row sm:items-center">
@@ -215,16 +266,17 @@ export function TicketsPage() {
           <select aria-label="Filter department" value={department} onChange={(event) => { setPage(1); setDepartment(event.target.value); }} className="rounded-lg border border-[#1e2638] bg-[#181c24] px-3 py-2 text-xs text-slate-300"><option value="">All departments</option>{departments.map((item) => <option key={item.id} value={item.id}>{item.name}</option>)}</select>
           <select aria-label="Filter created date" value={period} onChange={(event) => { setPage(1); setPeriod(event.target.value); }} className="rounded-lg border border-[#1e2638] bg-[#181c24] px-3 py-2 text-xs text-slate-300"><option>Any time</option><option>Last 24 hours</option><option>Older</option></select>
         </div>
-        <div className="flex flex-wrap gap-2"><PrimaryButton variant="secondary" size="sm" onClick={() => { setQuery(''); setStatus('All statuses'); setPriority('All priorities'); setDepartment(''); setPeriod('Any time'); setPage(1); }}>Clear All</PrimaryButton><PrimaryButton variant="secondary" icon={Download} size="sm" onClick={exportCsv}>Export CSV</PrimaryButton><PrimaryButton icon={Plus} size="sm" onClick={() => { setCreating(true); setActionError(''); }}>Create Ticket</PrimaryButton></div>
+        <div className="flex flex-wrap gap-2"><PrimaryButton variant="secondary" size="sm" onClick={() => { setQuery(''); setStatus('All statuses'); setPriority('All priorities'); setDepartment(''); setPeriod('Any time'); setPage(1); }}>Clear All</PrimaryButton>{!showArchived && <><PrimaryButton variant="secondary" icon={Download} size="sm" onClick={exportCsv}>Export CSV</PrimaryButton><PrimaryButton icon={Plus} size="sm" onClick={() => { setCreating(true); setActionError(''); }}>Create Ticket</PrimaryButton></>}</div>
       </div>
       {departmentError && <p role="alert" className="mb-3 text-xs text-amber-300">Department filters unavailable: {departmentError}</p>}
       {actionError && <p role="alert" className="mb-3 rounded border border-rose-800/60 bg-rose-950/20 p-3 text-xs text-rose-200">{actionError}</p>}
       {exportMessage && <p role="status" className="mb-3 text-xs text-emerald-300">{exportMessage}</p>}
+      {showArchived && <p className="mb-3 text-xs text-slate-400">Archived tickets are visible to ADMIN only. Restoring a ticket returns it to the active ticket list.</p>}
       <DataTable columns={columns} data={tickets} onRowClick={openTicket} selectedIds={selectedIds}
-        onSelectAll={(checked) => setSelectedIds(checked ? tickets.map((ticket) => ticket.id) : [])}
-        onSelectRow={(id) => setSelectedIds((current) => current.includes(id) ? current.filter((item) => item !== id) : [...current, id])} />
+        onSelectAll={showArchived ? undefined : (checked) => setSelectedIds(checked ? tickets.map((ticket) => ticket.id) : [])}
+        onSelectRow={showArchived ? undefined : (id) => setSelectedIds((current) => current.includes(id) ? current.filter((item) => item !== id) : [...current, id])} />
       <div className="flex flex-wrap items-center justify-between gap-3 py-4 text-xs text-slate-400"><span>Showing {pagination.count ? (page - 1) * pageSize + 1 : 0}–{Math.min(page * pageSize, pagination.count || 0)} of {pagination.count || 0}</span><div className="flex items-center gap-2"><label>Rows <select value={pageSize} onChange={(event) => { setPageSize(Number(event.target.value)); setPage(1); }} className="rounded border border-[#1e2638] bg-[#181c24] p-1">{PAGE_SIZES.map((size) => <option key={size}>{size}</option>)}</select></label><button aria-label="Previous page" disabled={page <= 1 || loading} onClick={() => setPage((value) => value - 1)} className="disabled:opacity-40"><ChevronLeft className="h-4 w-4" /></button><span>{page} / {pageCount}</span><button aria-label="Next page" disabled={page >= pageCount || loading} onClick={() => setPage((value) => value + 1)} className="disabled:opacity-40"><ChevronRight className="h-4 w-4" /></button></div></div>
-      {selectedIds.length > 0 && <div className="my-3 flex flex-wrap items-center gap-3 text-sm text-slate-300"><span>{selectedIds.length} selected</span>{canManageBulk ? <><select aria-label="Bulk status" defaultValue="" disabled={saving} onChange={(event) => bulkUpdate('set_status', event.target.value, event.currentTarget)} className="rounded border border-[#1e2638] bg-[#181c24] p-2"><option value="" disabled>Change status…</option>{Object.entries(STATUS_LABELS).map(([value, label]) => <option key={value} value={value}>{label}</option>)}</select><select aria-label="Bulk priority" defaultValue="" disabled={saving} onChange={(event) => bulkUpdate('set_priority', event.target.value, event.currentTarget)} className="rounded border border-[#1e2638] bg-[#181c24] p-2"><option value="" disabled>Change priority…</option>{PRIORITIES.map((value) => <option key={value}>{value}</option>)}</select></> : <span className="text-xs text-slate-500">Bulk updates are available to ADMIN and AGENT roles.</span>}<button type="button" disabled aria-label="Bulk assignment unavailable" className="cursor-not-allowed text-xs text-slate-500">Bulk assignment unavailable</button><button type="button" disabled aria-label="Archive unavailable" className="cursor-not-allowed text-xs text-slate-500">Archive unavailable</button><button type="button" className="text-slate-400" onClick={() => setSelectedIds([])}>Clear selection</button></div>}
+      {!showArchived && selectedIds.length > 0 && <div className="my-3 flex flex-wrap items-center gap-3 text-sm text-slate-300"><span>{selectedIds.length} selected</span>{canManageBulk ? <><select aria-label="Bulk status" defaultValue="" disabled={saving} onChange={(event) => bulkUpdate('set_status', event.target.value, event.currentTarget)} className="rounded border border-[#1e2638] bg-[#181c24] p-2"><option value="" disabled>Change status…</option>{Object.entries(STATUS_LABELS).map(([value, label]) => <option key={value} value={value}>{label}</option>)}</select><select aria-label="Bulk priority" defaultValue="" disabled={saving} onChange={(event) => bulkUpdate('set_priority', event.target.value, event.currentTarget)} className="rounded border border-[#1e2638] bg-[#181c24] p-2"><option value="" disabled>Change priority…</option>{PRIORITIES.map((value) => <option key={value}>{value}</option>)}</select></> : <span className="text-xs text-slate-500">Bulk updates are available to ADMIN and AGENT roles.</span>}<button type="button" disabled aria-label="Bulk assignment unavailable" className="cursor-not-allowed text-xs text-slate-500">Bulk assignment unavailable</button><button type="button" className="text-slate-400" onClick={() => setSelectedIds([])}>Clear selection</button></div>}
     </ApiState>
 
     <Drawer isOpen={Boolean(selectedTicket)} onClose={() => { detailRequestRef.current += 1; setDetailLoading(false); setDetailLoaded(false); setSelectedTicket(null); setEdit(null); setActionError(''); }} title={selectedTicket ? `${selectedTicket.id}: ${selectedTicket.title}` : ''} subtitle="Ticket details and permitted updates">
@@ -248,5 +300,6 @@ export function TicketsPage() {
     <Drawer isOpen={creating} onClose={() => { setCreating(false); setActionError(''); }} title="Create Ticket" subtitle="Requester is derived from your signed-in account" width="max-w-lg">
       <form onSubmit={createTicket} className="space-y-4"><label className="block text-sm text-slate-300">Title *<input required maxLength={200} value={draft.title} onChange={(event) => setDraft({ ...draft, title: event.target.value })} className="mt-1 w-full rounded border border-[#1e2638] bg-[#181c24] p-2 text-white" /></label><label className="block text-sm text-slate-300">Description *<textarea required value={draft.description} onChange={(event) => setDraft({ ...draft, description: event.target.value })} className="mt-1 w-full rounded border border-[#1e2638] bg-[#181c24] p-2 text-white" /></label><label className="block text-sm text-slate-300">Department<select value={draft.departmentId} onChange={(event) => setDraft({ ...draft, departmentId: event.target.value })} className="mt-1 w-full rounded border border-[#1e2638] bg-[#181c24] p-2 text-white"><option value="">No department</option>{departments.map((item) => <option key={item.id} value={item.id}>{item.name}</option>)}</select></label><label className="block text-sm text-slate-300">Priority<select value={draft.priority} onChange={(event) => setDraft({ ...draft, priority: event.target.value })} className="mt-1 w-full rounded border border-[#1e2638] bg-[#181c24] p-2 text-white">{PRIORITIES.map((value) => <option key={value}>{value}</option>)}</select></label>{actionError && <p role="alert" className="text-xs text-rose-300">{actionError}</p>}<div className="flex justify-end gap-2"><PrimaryButton type="button" variant="secondary" onClick={() => setCreating(false)}>Cancel</PrimaryButton><PrimaryButton type="submit" disabled={saving}>{saving ? 'Creating…' : 'Create Ticket'}</PrimaryButton></div></form>
     </Drawer>
+    {archiveConfirmation && <div className="fixed inset-0 z-[60] grid place-items-center bg-black/70 p-4" onMouseDown={(event) => { if (event.target === event.currentTarget && !archiveBusyRef.current) setArchiveConfirmation(null); }}><section ref={archiveDialogRef} role="alertdialog" aria-modal="true" aria-labelledby="archive-dialog-title" aria-describedby="archive-dialog-description" className="w-full max-w-md rounded-xl border border-[#273247] bg-[#0f131c] p-5 shadow-2xl"><h2 id="archive-dialog-title" className="text-base font-semibold text-white">{archiveConfirmation.action === 'archive' ? 'Archive ticket?' : 'Restore ticket?'}</h2><p id="archive-dialog-description" className="mt-2 text-sm text-slate-300">{archiveConfirmation.action === 'archive' ? <>Ticket <span className="font-mono text-blue-300">{archiveConfirmation.ticket.id}</span> will leave active lists. Its ticket, assignments, and analysis history will be preserved.</> : <>Ticket <span className="font-mono text-blue-300">{archiveConfirmation.ticket.id}</span> will return to active ticket lists.</>}</p>{actionError && <p role="alert" className="mt-3 text-xs text-rose-300">{actionError}</p>}<div className="mt-5 flex justify-end gap-2"><button ref={archiveCancelRef} type="button" disabled={archiveBusy} onClick={() => setArchiveConfirmation(null)} className="inline-flex items-center justify-center rounded-lg border border-slate-700/80 bg-[#181c24] px-2.5 py-1.5 text-xs font-medium text-slate-200 transition-colors hover:bg-[#202634] focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-2 focus:ring-offset-desk-bg disabled:pointer-events-none disabled:opacity-50">Cancel</button><PrimaryButton variant={archiveConfirmation.action === 'archive' ? 'danger' : 'primary'} disabled={archiveBusy} onClick={confirmArchiveAction}>{archiveBusy ? 'Please wait…' : archiveConfirmation.action === 'archive' ? 'Archive ticket' : 'Restore ticket'}</PrimaryButton></div></section></div>}
   </AppShell>;
 }

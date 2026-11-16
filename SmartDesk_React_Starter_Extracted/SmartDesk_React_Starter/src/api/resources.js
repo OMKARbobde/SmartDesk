@@ -19,6 +19,8 @@ export const departmentApi = {
     const payload = await apiRequest(`/departments/${queryString(includeInactive ? { include_inactive: 'true' } : {})}`);
     return payload.data;
   },
+  create: async (department) => (await apiRequest('/departments/', { method: 'POST', body: department })).data,
+  update: async (id, changes) => (await apiRequest(`/departments/${id}/`, { method: 'PATCH', body: changes })).data,
 };
 
 export const ticketApi = {
@@ -26,6 +28,12 @@ export const ticketApi = {
     const payload = await apiRequest(`/tickets/${queryString(filters)}`);
     return { items: payload.data.map(adaptTicket), pagination: payload.meta?.pagination };
   },
+  listArchived: async (filters = {}) => {
+    const payload = await apiRequest(`/tickets/archived/${queryString(filters)}`);
+    return { items: payload.data.map(adaptTicket), pagination: payload.meta?.pagination };
+  },
+  archive: async (pk) => adaptTicket((await apiRequest(`/tickets/${pk}/archive/`, { method: 'POST', body: {} })).data),
+  restore: async (pk) => adaptTicket((await apiRequest(`/tickets/${pk}/restore/`, { method: 'POST', body: {} })).data),
   get: async (pk) => adaptTicket((await apiRequest(`/tickets/${pk}/`)).data),
   listAll: async (filters = {}) => {
     const all = [];
@@ -108,4 +116,14 @@ export const auditApi = {
     const payload = await apiRequest(`/audit-logs/${queryString(filters)}`);
     return { items: payload.data, pagination: payload.meta?.pagination };
   },
+};
+
+export const notificationApi = {
+  list: async (filters = {}) => {
+    const payload = await apiRequest(`/notifications/${queryString(filters)}`);
+    return { items: payload.data, pagination: payload.meta?.pagination };
+  },
+  unreadCount: async () => (await apiRequest('/notifications/unread-count/')).data.count,
+  markRead: async (id) => (await apiRequest(`/notifications/${id}/read/`, { method: 'POST', body: {} })).data,
+  markAllRead: async () => (await apiRequest('/notifications/mark-all-read/', { method: 'POST', body: {} })).data,
 };

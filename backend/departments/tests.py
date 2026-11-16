@@ -16,6 +16,7 @@ User = get_user_model()
 class DepartmentApiTests(TestCase):
     def setUp(self):
         self.admin = User.objects.create_user("dept-admin", password="test-pass", role="ADMIN")
+        self.agent = User.objects.create_user("dept-agent", password="test-pass", role="AGENT")
         self.employee = User.objects.create_user("dept-employee", password="test-pass", role="EMPLOYEE")
         self.active = Department.objects.create(name="Active", code="ACT", is_active=True)
         self.inactive = Department.objects.create(name="Inactive", code="INA", is_active=False)
@@ -44,6 +45,98 @@ class DepartmentApiTests(TestCase):
         response = self.client.get("/api/departments/?include_inactive=maybe")
         self.assertEqual(response.status_code, 400)
         self.assertEqual(response.json()["error"]["code"], "validation_error")
+
+    def test_admin_can_create_and_update_department(self):
+        self.client.force_authenticate(self.admin)
+        created = self.client.post("/api/departments/", {
+            "name": "Platform Services", "code": "PLAT", "description": "Internal support"
+        }, format="json")
+        self.assertEqual(created.status_code, 201)
+        self.assertEqual(created.json()["data"]["code"], "PLAT")
+        self.assertIn("/api/departments/", created["Location"])
+
+        department_id = created.json()["data"]["id"]
+        updated = self.client.patch(f"/api/departments/{department_id}/", {
+            "description": "Updated description", "is_active": False
+        }, format="json")
+        self.assertEqual(updated.status_code, 200)
+        self.assertEqual(updated.json()["data"]["description"], "Updated description")
+        self.assertFalse(updated.json()["data"]["is_active"])
+
+    def test_department_writes_are_admin_only(self):
+        for user in (self.agent, self.employee):
+            with self.subTest(role=user.role):
+                self.client.force_authenticate(user)
+                created = self.client.post("/api/departments/", {
+                    "name": "Forbidden", "code": "FORBID"
+                }, format="json")
+                updated = self.client.patch(f"/api/departments/{self.active.pk}/", {
+                    "description": "Forbidden"
+                }, format="json")
+                self.assertEqual(created.status_code, 403)
+                self.assertEqual(updated.status_code, 403)
+                self.assertEqual(created.json()["error"]["code"], "permission_denied")
+                self.assertEqual(updated.json()["error"]["code"], "permission_denied")
+
+    def test_department_writes_require_authentication(self):
+        created = self.client.post("/api/departments/", {
+            "name": "Anonymous", "code": "ANON"
+        }, format="json")
+        updated = self.client.patch(f"/api/departments/{self.active.pk}/", {
+            "description": "Anonymous"
+        }, format="json")
+        self.assertEqual(created.status_code, 401)
+        self.assertEqual(updated.status_code, 401)
+
+    def test_create_validation_and_duplicate_conflicts(self):
+        self.client.force_authenticate(self.admin)
+        missing = self.client.post("/api/departments/", {"name": "Missing code"}, format="json")
+        self.assertEqual(missing.status_code, 400)
+        self.assertEqual(missing.json()["error"]["code"], "validation_error")
+
+        for payload in (
+            {"name": self.active.name, "code": "NEW"},
+            {"name": "New department", "code": self.active.code},
+        ):
+            with self.subTest(payload=payload):
+                response = self.client.post("/api/departments/", payload, format="json")
+                self.assertEqual(response.status_code, 409)
+                self.assertEqual(response.json()["error"]["code"], "conflict")
+
+    def test_update_rejects_duplicate_name_or_code(self):
+        self.client.force_authenticate(self.admin)
+        for payload in ({"name": self.inactive.name}, {"code": self.inactive.code}):
+            with self.subTest(payload=payload):
+                response = self.client.patch(f"/api/departments/{self.active.pk}/", payload, format="json")
+                self.assertEqual(response.status_code, 409)
+                self.assertEqual(response.json()["error"]["code"], "conflict")
+
+    def test_deactivation_preserves_ticket_and_employee_references(self):
+        profile = EmployeeProfile.objects.create(
+            user=self.employee, employee_id="DEPT-EMP", department=self.active,
+            designation="Support Engineer",
+        )
+        ticket = Ticket.objects.create(
+            ticket_id="SD-DEPT-001", title="Department reference", description="Keep references",
+            created_by=self.employee, department=self.active,
+        )
+        self.client.force_authenticate(self.admin)
+        response = self.client.patch(f"/api/departments/{self.active.pk}/", {"is_active": False}, format="json")
+        self.assertEqual(response.status_code, 200)
+        profile.refresh_from_db()
+        ticket.refresh_from_db()
+        self.assertEqual(profile.department_id, self.active.pk)
+        self.assertEqual(ticket.department_id, self.active.pk)
+        self.assertFalse(Department.objects.get(pk=self.active.pk).is_active)
+
+    def test_csrf_is_required_for_department_writes(self):
+        client = APIClient(enforce_csrf_checks=True)
+        self.assertTrue(client.login(username=self.admin.username, password="test-pass"))
+        response = client.post("/api/departments/", {
+            "name": "CSRF Department", "code": "CSRF"
+        }, format="json")
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.json()["error"]["code"], "csrf_failed")
 
 
 class DepartmentAnalyticsApiTests(TestCase):

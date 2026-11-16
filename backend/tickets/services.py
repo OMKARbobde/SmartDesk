@@ -13,6 +13,7 @@ from auditlog.services import (
     record_ticket_created,
     record_ticket_restored,
 )
+from notifications.services import notify_ticket_status_changed
 from smartdesk.api import Conflict
 from .models import Ticket
 
@@ -87,6 +88,12 @@ def update_ticket_if_unchanged(ticket, *, actor, **changes):
                 raise Conflict("The ticket changed during this request. Refresh and retry.")
             ticket.refresh_from_db()
             record_ticket_changes(actor=actor, ticket=ticket, before=before)
+            if before["status"] != ticket.status:
+                notify_ticket_status_changed(
+                    ticket=ticket,
+                    actor=actor,
+                    previous_status=before["status"],
+                )
     except OperationalError as exc:
         _handle_sqlite_lock(exc)
     ticket.refresh_from_db()
@@ -166,6 +173,13 @@ def apply_bulk_ticket_update(tickets, *, field, value, actor):
                     previous_value=previous_value,
                     new_value=value,
                 )
+                if field == "status" and previous_value != value:
+                    ticket.refresh_from_db()
+                    notify_ticket_status_changed(
+                        ticket=ticket,
+                        actor=actor,
+                        previous_status=previous_value,
+                    )
     except OperationalError as exc:
         _handle_sqlite_lock(exc)
     return list(Ticket.objects.filter(pk__in=[ticket.pk for ticket in tickets]).order_by("pk"))

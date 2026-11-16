@@ -37,6 +37,9 @@ urlpatterns = [
     # Persistent, ADMIN-only audit trail
     path('api/audit-logs/', include('auditlog.urls')),
 
+    # Persistent recipient-scoped in-app notifications
+    path('api/notifications/', include('notifications.urls')),
+
     # AI Engine API
     path('api/ai/', include('ai_engine.urls')),
 ]

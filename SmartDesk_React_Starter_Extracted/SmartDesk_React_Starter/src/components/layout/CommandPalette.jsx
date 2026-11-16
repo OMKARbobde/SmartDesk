@@ -1,10 +1,12 @@
 import { useState, useEffect, useRef } from 'react';
-import { Search, Ticket, Users, Sparkles, X } from 'lucide-react';
+import { Search, Ticket, Users, Sparkles, Building2, X } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext';
 
 export function CommandPalette({ isOpen, onClose }) {
   const [query, setQuery] = useState('');
   const navigate = useNavigate();
+  const { user } = useAuth();
   const panelRef = useRef(null);
   const inputRef = useRef(null);
   const onCloseRef = useRef(onClose);
@@ -37,9 +39,11 @@ export function CommandPalette({ isOpen, onClose }) {
     { label: 'Run AI Predictive Incident Triage', path: '/ai-analysis', icon: Sparkles },
     { label: 'Workforce Capacity & Shifts', path: '/workforce', icon: Users },
     { label: 'Department Analytics', path: '/analytics', icon: Ticket },
+    { label: 'Department Management', path: '/departments', icon: Building2, adminOnly: true },
     { label: 'Settings & RBAC', path: '/settings', icon: Users },
     { label: 'Sign in', path: '/login', icon: Users },
   ];
+  const visibleNav = quickNav.filter((item) => !item.adminOnly || user?.role === 'ADMIN');
 
   return (
     <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-start justify-center pt-24 px-4" onMouseDown={(event) => { if (event.target === event.currentTarget) onClose(); }}>
@@ -59,7 +63,7 @@ export function CommandPalette({ isOpen, onClose }) {
         </div>
         <div className="p-2 space-y-1">
           <span className="text-[10px] font-semibold text-slate-500 uppercase px-3 py-1">Quick Navigation</span>
-          {quickNav.filter((item) => item.label.toLowerCase().includes(query.toLowerCase())).map((item, idx) => {
+          {visibleNav.filter((item) => item.label.toLowerCase().includes(query.toLowerCase())).map((item, idx) => {
             const Icon = item.icon;
             return (
               <button
@@ -75,7 +79,7 @@ export function CommandPalette({ isOpen, onClose }) {
               </button>
             );
           })}
-          {query && quickNav.every((item) => !item.label.toLowerCase().includes(query.toLowerCase())) && <p className="px-3 py-4 text-xs text-slate-500">No matching destinations.</p>}
+          {query && visibleNav.every((item) => !item.label.toLowerCase().includes(query.toLowerCase())) && <p className="px-3 py-4 text-xs text-slate-500">No matching destinations.</p>}
         </div>
       </div>
     </div>

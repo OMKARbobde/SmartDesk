@@ -6,6 +6,7 @@ import {
   Sparkles,
   Users,
   BarChart3,
+  Building2,
   Settings,
   Layers,
   ShieldCheck,
@@ -23,6 +24,7 @@ const navItems = [
     { label: 'Department Analytics', path: '/analytics', icon: BarChart3 },
   ]},
   { section: 'ADMINISTRATION', items: [
+    { label: 'Department Management', path: '/departments', icon: Building2, adminOnly: true },
     { label: 'Settings & RBAC', path: '/settings', icon: Settings },
   ]}
 ];
@@ -56,7 +58,7 @@ export function Sidebar() {
               {group.section}
             </div>
             <nav className="flex md:block md:space-y-1 gap-1">
-              {group.items.map((item) => {
+              {group.items.filter((item) => !item.adminOnly || user?.role === 'ADMIN').map((item) => {
                 const Icon = item.icon;
                 return (
                   <NavLink

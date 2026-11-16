@@ -2,23 +2,9 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { AlertCircle, ChevronLeft, ChevronRight, RotateCcw } from 'lucide-react';
 import { auditApi } from '../../api/resources';
 import { ApiError, errorMessage } from '../../api/client';
+import { describeDetails, EVENT_LABELS } from './auditLogFormatters';
 
 const DEFAULT_PAGE_SIZE = 20;
-const EVENT_LABELS = {
-  TICKET_CREATED: 'Ticket created',
-  TICKET_UPDATED: 'Ticket updated',
-  TICKET_STATUS_CHANGED: 'Ticket status changed',
-  TICKET_PRIORITY_CHANGED: 'Ticket priority changed',
-  TICKET_BULK_STATUS_CHANGED: 'Bulk status change',
-  TICKET_BULK_PRIORITY_CHANGED: 'Bulk priority change',
-  ASSIGNMENT_CREATED: 'Assignment created',
-  ASSIGNMENT_REASSIGNED: 'Assignment reassigned',
-  ASSIGNMENT_ACCEPTED: 'Assignment accepted',
-  ASSIGNMENT_COMPLETED: 'Assignment completed',
-  TICKET_ARCHIVED: 'Ticket archived',
-  TICKET_RESTORED: 'Ticket restored',
-};
-
 const EVENT_OPTIONS = Object.entries(EVENT_LABELS);
 const INPUT_CLASS = 'mt-1 w-full rounded border border-[#1e2638] bg-[#0f131c] px-3 py-2 text-xs text-white placeholder:text-slate-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-500';
 
@@ -26,23 +12,6 @@ function formatDateTime(value) {
   if (!value) return '—';
   const date = new Date(value);
   return Number.isNaN(date.getTime()) ? '—' : date.toLocaleString();
-}
-
-function describeDetails(event) {
-  const { details = {}, target_user: targetUser } = event;
-  if (Array.isArray(details.changed_fields)) {
-    const names = details.changed_fields.map((field) => field.replaceAll('_', ' '));
-    const department = details.changes?.department_id;
-    return department
-      ? `${names.join(', ')} · department ${department.from ?? 'none'} → ${department.to ?? 'none'}`
-      : names.join(', ');
-  }
-  if ('from' in details && 'to' in details) return `${details.from} → ${details.to}`;
-  if (details.assignment_status) return `${details.assignment_status} · ${targetUser?.display_name || 'Assignee unavailable'}`;
-  if (details.assigned_to_profile_id) return `Assigned to ${targetUser?.display_name || 'employee'} · profile #${details.assigned_to_profile_id}`;
-  if (details.previous_assignee_user_id) return `Reassigned from user #${details.previous_assignee_user_id} to ${targetUser?.display_name || 'new assignee'}`;
-  if (details.status || details.priority) return [details.status, details.priority].filter(Boolean).join(' · ');
-  return '—';
 }
 
 function toApiFilters(filters, page, pageSize) {

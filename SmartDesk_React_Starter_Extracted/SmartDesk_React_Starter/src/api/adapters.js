@@ -26,6 +26,8 @@ export function adaptTicket(ticket) {
     requester: displayName(ticket.requester),
     assignee: displayName(ticket.assignee) === '—' ? 'Unassigned' : displayName(ticket.assignee),
     assignmentId: ticket.assignment_id,
+    isArchived: Boolean(ticket.is_archived),
+    archivedAt: ticket.archived_at || null,
     priority: ticket.priority,
     status: displayEnum(STATUS_LABELS, ticket.status),
     createdAt: ticket.created_at,

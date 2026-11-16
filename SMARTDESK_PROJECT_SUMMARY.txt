@@ -1,0 +1,424 @@
+﻿SMARTDESK PROJECT SUMMARY
+========================
+
+1. PROJECT OVERVIEW
+-------------------
+SmartDesk is a web-based IT service management application for managing support tickets, employee assignments, department workload, ticket analysis, and audit history.
+
+The project has a Django REST Framework backend and a React + Vite frontend. The active React application is:
+SmartDesk_React_Starter_Extracted/SmartDesk_React_Starter/
+
+The separate frontend/ directory is a generic Vite starter and is not the SmartDesk UI.
+
+2. MAIN FEATURES AND MODULES
+----------------------------
+- Tickets: Create, list, search, filter, sort, paginate, view, update, and bulk-update tickets. Ticket updates require the latest updated_at value to prevent stale edits. Tickets can be archived and restored; there is no permanent-delete endpoint.
+- Departments: List active departments; ADMIN can include inactive departments and manage department creation, editing, activation and deactivation. Deactivation preserves ticket and employee references.
+- Workforce and assignments: Search employees, view employee profiles, update permitted profile fields, create and reassign ticket assignments, and accept or complete an employee's own current assignment.
+- Department analytics: Aggregate visible, non-archived tickets by department, status, priority, and workload. Supports department and date filters.
+- AI ticket analysis: Analyze a ticket and persist or update its analysis record.
+- Audit logs: Record ticket, assignment, department, archive and restore events; administrators can filter and paginate audit records.
+- Notifications: Persist recipient-scoped in-app notifications for assignment, reassignment, ticket status and assignment status events. The header shows unread count and supports read actions.
+- Session authentication: Username or email login, logout, CSRF bootstrap, and current-user/profile endpoints.
+- Frontend shell: Dashboard, tickets, AI analysis, workforce, analytics, settings and login, plus an ADMIN-only department-management view; routes reuse shared navigation and UI components.
+
+3. FRONTEND TECHNOLOGIES AND LIBRARIES
+--------------------------------------
+The active UI declares:
+- React 18 and React DOM
+- React Router DOM
+- Vite 5
+- Tailwind CSS and its Vite plugin
+- Lucide React icons
+
+The frontend uses a shared API client and adapters. It sends session cookies with requests and handles CSRF tokens, API errors, and expired sessions. No chart library is declared in the active frontend package manifest.
+
+4. BACKEND TECHNOLOGIES AND LIBRARIES
+-------------------------------------
+The verified project environment uses:
+- Python 3.9.23
+- Django 4.2.30
+- Django REST Framework 3.16.1
+- django-cors-headers 4.9.0
+- requests 2.32.5 (used by the manual AI integration script)
+
+These versions were observed in the project environment and are pinned in the existing full backend/requirements.txt. That manifest is 151 lines and byte-for-byte matches the tracked original; it was not regenerated or reduced during this review.
+
+5. DATABASE
+-----------
+Django is configured to use SQLite at backend/db.sqlite3. The project includes migrations for its applications. Local database and backup files are excluded from Git and should not be committed or distributed as application data.
+
+The analytics API does not fabricate resolution-time metrics: the current ticket data does not provide reliable resolution timestamps or status history, so average resolution time is reported as unavailable.
+
+6. AI/ML FUNCTIONALITY
+----------------------
+The current analysis implementation is a local heuristic, not a connected machine-learning service. It checks ticket title and description text against keyword lists to infer category, priority, and sentiment. It assigns a heuristic confidence score and generates a suggested response. Results are saved in the ticket's one-to-one TicketAnalysis record; reanalysis updates that record.
+
+No external AI provider, API key, model service, or telemetry integration is configured. Runbook dispatch is not connected to an automation service and is marked unavailable in the UI.
+
+7. AUTHENTICATION AND AUTHORIZATION
+-----------------------------------
+Authentication uses Django sessions, not JWTs. The API provides a CSRF bootstrap endpoint; unsafe requests require CSRF protection. The frontend includes credentials and the CSRF header through its shared client.
+
+The custom accounts.User model has ADMIN, AGENT, and EMPLOYEE roles. Backend permissions enforce access:
+- ADMIN and AGENT: Global ticket visibility.
+- EMPLOYEE: Tickets they created or have a current assigned/accepted assignment for.
+- Audit logs: ADMIN only.
+- Employee directory: ADMIN and AGENT; employees can access their own profile subject to endpoint rules.
+- Assignments: ADMIN/AGENT manage assignments; employees can update their own current assignment through permitted transitions.
+
+No public registration, password-reset workflow, SSO, or server-side role-administration API is present.
+
+8. PROJECT FOLDER STRUCTURE
+---------------------------
+SmartDesk/
+|-- backend/
+|   |-- accounts/       Custom user, sessions, profiles, employee APIs
+|   |-- ai_engine/      Heuristic ticket analysis
+|   |-- assignment/     Assignment lifecycle and APIs
+|   |-- auditlog/       Persistent audit events and read API
+|   |-- departments/    Department listing and analytics
+|   |-- notifications/ Persistent recipient-scoped notifications
+|   |-- smartdesk/      Django settings, URLs, shared API responses
+|   |-- tickets/        Ticket models, policies, services, APIs
+|   `-- manage.py
+`-- SmartDesk_React_Starter_Extracted/
+    `-- SmartDesk_React_Starter/
+        |-- src/api/          API client, resources, adapters
+        |-- src/components/   Shared UI and layout
+        |-- src/context/      Authentication context
+        |-- src/pages/        Core application screens, login and ADMIN department management
+        |-- design-reference/
+        |-- package.json
+        `-- vite.config.js
+
+The repository also contains frontend/ and frontend_backup/; they are not the active SmartDesk frontend.
+
+9. INSTALLATION AND SETUP
+-------------------------
+Frontend:
+
+    cd SmartDesk_React_Starter_Extracted/SmartDesk_React_Starter
+    npm ci
+    npm run dev
+
+The active frontend has a package-lock.json for reproducible dependency installation.
+
+The backend has a full pinned dependency list at backend/requirements.txt (151 dependency entries). The manifest was converted from UTF-16 LE to UTF-8 without changing any entry; pip parsed all 151 entries without installing packages. It contains many packages beyond the small Django runtime surface, and clean installation in a fresh environment has not been verified. Install it from the repository root with:
+
+    python -m pip install -r backend/requirements.txt
+
+Typical backend setup after installing the required packages:
+
+    cd backend
+    python manage.py migrate
+    python manage.py createsuperuser
+    python manage.py runserver
+
+Set DJANGO_SECRET_KEY in the runtime environment before starting Django. The custom user role defaults to EMPLOYEE; a Django superuser should also be assigned the ADMIN SmartDesk role for ADMIN-only API features. Department and employee profile data must be provisioned in the database.
+
+The local development CORS/CSRF configuration allows the frontend origin http://localhost:5173.
+
+10. ENVIRONMENT VARIABLES
+-------------------------
+- DJANGO_SECRET_KEY: Required by Django settings; the application fails at startup if it is absent.
+- VITE_API_BASE_URL: Optional frontend API base URL; defaults to http://localhost:8000/api.
+- SMARTDESK_TEST_AI_PASSWORD: Used only by backend/test_ai.py, the manual Django-admin/AI integration script.
+
+The checked-in .env.example contains placeholders only. Django does not load .env files automatically in the current source, so variables must be supplied by the runtime environment or external deployment configuration.
+
+11. API ENDPOINTS
+-----------------
+Successful API responses use the shared data/meta envelope; errors use the standardized error envelope.
+
+Authentication and profile:
+- GET  /api/auth/csrf/       Set/bootstrap the CSRF cookie and return a token.
+- POST /api/auth/login/     Session login by username or email.
+- POST /api/auth/logout/    End the session.
+- GET  /api/auth/me/         Retrieve the current authenticated user.
+- GET, PATCH /api/users/me/  Read or update permitted profile fields.
+
+Tickets:
+- GET, POST /api/tickets/            List or create tickets.
+- GET, PATCH /api/tickets/{pk}/      Retrieve or update a ticket.
+- POST /api/tickets/bulk/            Bulk status or priority updates.
+- GET /api/tickets/archived/         List archived tickets; ADMIN only.
+- POST /api/tickets/{pk}/archive/    Archive a ticket.
+- POST /api/tickets/{pk}/restore/    Restore an archived ticket; ADMIN only.
+
+Departments and workforce:
+- GET, POST /api/departments/        List departments or create one (ADMIN create only).
+- PATCH /api/departments/{id}/       Update department fields and activation state (ADMIN only).
+- GET /api/employees/                Search, filter, and paginate employee directory.
+- GET, PATCH /api/employees/{id}/    Read employee details or update permitted profile fields.
+- GET /api/assignments/              List visible assignments.
+- POST /api/tickets/{id}/assignments/ Assign or reassign a ticket.
+- PATCH /api/assignments/{id}/       Update an assignment through permitted transitions.
+
+Analytics and AI:
+- GET /api/analytics/departments/    Department aggregates with department/date filters.
+- POST /api/ai/analyze/{id}/         Analyze a ticket; route ID is the database primary key.
+
+Audit logs:
+- GET /api/audit-logs/               Filter and paginate audit events; ADMIN only.
+
+Notifications:
+- GET /api/notifications/            List the authenticated user's notifications.
+- GET /api/notifications/unread-count/ Return the authenticated user's unread count.
+- POST /api/notifications/{id}/read/ Mark one owned notification read.
+- POST /api/notifications/mark-all-read/ Mark all of the authenticated user's notifications read.
+
+The API uses one-based pagination with a default page size of 20 and maximum of 100. Ticket visibility is enforced server-side.
+
+12. IMPLEMENTATION STATUS AND LIMITATIONS
+------------------------------------------
+Implemented and verified in source: session authentication and CSRF, ticket CRUD/update and bulk status/priority actions, archive and restore UI/API, employee and department management, assignment lifecycle, heuristic AI analysis, department analytics, ADMIN-only audit logs, and persistent in-app notifications. The active frontend is wired to these APIs. ADMIN archive/restore UI and AGENT archive UI were browser-tested against an isolated staging database; EMPLOYEE archive controls are hidden and backend denials were verified.
+
+Current limitations:
+- Runbook dispatch and external AI/telemetry integrations are not implemented.
+- Average resolution time, SLA, and MTTR metrics are not supported by reliable stored timestamps/history.
+- Server-side settings and role administration are not implemented; theme and supported preferences remain local, and demo controls are labelled.
+- External AI inference, telemetry, runbook dispatch, SLA and MTTR are unavailable; no unsupported values are fabricated.
+- Production settings require environment-specific configuration: DEBUG must be disabled, ALLOWED_HOSTS populated, HTTPS/HSTS and secure cookies enabled, production CORS/CSRF origins configured, and STATIC_ROOT/static serving set.
+- SQLite has limited concurrent write capacity and no PostgreSQL-style row locks; select a production database based on expected write volume and rehearse any database migration.
+- The frontend AUDIT_REPORT.md is a historical UI audit of an earlier mock-based state. It is marked as superseded and must not be treated as current implementation status.
+
+13. HISTORICAL AUTHENTICATED BROWSER VERIFICATION (2026-11-09)
+-------------------------------------------------------------
+This section records an earlier verification snapshot and is superseded for
+department management, department audit events, notifications and archive UI
+by the later dated entries in this file. Its PARTIAL/NOT TESTED statuses are
+historical and do not describe the current implementation state.
+
+Browser: Microsoft Edge 157 with Playwright 1.60 attached to the visible
+browser. The user entered ADMIN credentials in the browser form; no password
+value was inspected, copied, logged, or stored.
+
+Safety and environment:
+- The pre-existing services were already using localhost:8000 and localhost:5173.
+  To avoid writing to the configured database, all state-changing browser checks
+  ran against a uniquely named SQLite online-backup copy outside the repository,
+  served on separate local backend and frontend ports.
+- Synthetic department, employee, ticket, assignment, analysis and audit data
+  were created or changed only in this isolated copy. The test runner used a
+  separate uniquely named temporary database.
+- The initial port check found an existing Django server on port 8000. Before
+  this was recognized, a few read-only GET checks used that service. No business
+  record write request was sent to it. A read-only comparison of the live DB
+  with the pre-test snapshot found unchanged employee profiles, departments,
+  tickets, assignments, analyses and audit rows. One existing ADMIN account's
+  last_login value changed after the snapshot, consistent with Django login
+  bookkeeping. No password, role, or other account field changed. Live database
+  integrity remained "ok"; counts remained 4 users, 1 employee profile,
+  5 departments, 2 tickets, 1 assignment, 2 analyses and 0 audit events.
+- The snapshot had 26 applied migrations, including auditlog.0001_initial.
+  No migration was applied to the live database or the staging source copy.
+- A temporary zero-byte SQLite path artifact created by the first malformed
+  staging launcher was immediately removed after verifying it contained no
+  records. The corrected launcher explicitly checked the snapshot path before
+  starting the isolated service.
+
+Workflow results:
+- Authentication — PASS. ADMIN login reached the authenticated UI and
+  /api/auth/me/ returned role ADMIN. The session remained authenticated across
+  page navigation. ADMIN logout redirected to /login and /api/auth/me/ returned
+  the standardized 401 not_authenticated response. A synthetic staging
+  EMPLOYEE login also survived refresh.
+- Dashboard — PASS. Dashboard totals matched the ticket-list API response;
+  KPI values came from visible API tickets. It labels telemetry and time-series
+  data unavailable instead of showing sample values.
+- Tickets — PASS for create, detail, edit, status/priority changes, search and
+  status filtering. A synthetic ticket was created through the UI and received
+  a server-generated public ID. UI edits persisted as IN_PROGRESS/HIGH in the
+  API. The filter returned the ticket for IN_PROGRESS and zero rows for OPEN.
+  Concurrent stale-client conflict handling was not exercised in this browser
+  pass.
+- Employee/workforce — PASS. ADMIN directory and detail views showed the
+  synthetic employee. Updating its designation persisted through the API.
+  The synthetic employee accepted and completed its assignment through the UI;
+  API status was ACCEPTED then COMPLETED. Employee self-service phone editing
+  was not tested.
+- Departments — PARTIAL. Authenticated department listing and department
+  filtering worked. The current UI/API does not provide department create/edit
+  management, so CRUD was not tested and is not represented as available.
+- Analytics — PASS. Department and date-range filters updated API-derived
+  values. For the synthetic department the API returned one ticket and one
+  current workload item; the seven-day filter returned the same matching test
+  record. Average resolution time correctly remained unavailable because no
+  reliable resolved_at/status history is stored.
+- AI analysis — PASS. UI POST to /api/ai/analyze/3/ returned 200; the UI showed
+  a persisted result and analyzed_at. The API returned canonical uppercase
+  values. Read-only staging DB inspection confirmed one TicketAnalysis row for
+  the synthetic ticket.
+- Settings — PASS for browser-local preferences. Idle-time preference saved,
+  survived refresh, and was restored to its original value after the check.
+  Role/security controls remain explicitly demo/local and do not change backend
+  policy.
+- Audit Logs — PASS for ADMIN access and filtering. The Settings panel displayed
+  real audit records for ticket creation, ticket update, status and priority
+  changes, and assignment creation. Event type plus ticket ID filtering returned
+  the matching row; Reset restored all five rows. Staging DB inspection later
+  confirmed assignment acceptance and completion events were also persisted.
+  EMPLOYEE audit API access returned 403 permission_denied.
+- Authorization — PASS for tested restrictions. EMPLOYEE directory and audit
+  list calls returned standardized 403 responses. A ticket outside the
+  employee's creator/current-assignee scope returned 404 not_found. Employee
+  analytics contained only the single currently visible assigned ticket; an
+  unrelated department filter returned zero tickets.
+- Browser diagnostics — PASS. Dashboard, Tickets, Workforce, Analytics,
+  AI Analysis and Settings routes loaded. During the route sweep there were no
+  browser console errors, uncaught page errors, failed network requests, or
+  unexpected HTTP errors. Expected 401, 403 and 404 responses were observed in
+  authentication/permission checks. Django logs showed no 500 responses.
+
+Automated verification:
+- Django system check: passed.
+- Complete Django suite: 107/107 passed using a uniquely named disposable
+  test database outside the repository.
+- Frontend API tests: 8/8 passed with Node's built-in test runner.
+- Vite production build: passed; output went to the staging directory outside
+  the repository.
+- Final SQLite integrity checks: live DB and staging snapshot both reported
+  "ok". Staging totals after the synthetic workflow were 5 users, 2 employee
+  profiles, 6 departments, 3 tickets, 2 assignments, 3 analyses and 7 audit
+  events. These staging-only records are clearly marked E2E-92C62543.
+
+No application source code was changed and no defect requiring a code fix was
+confirmed. The only repository file changed by this verification is this
+project summary. Existing unrelated working-tree changes remain untouched.
+The staging Django/Vite servers were stopped; no commit, push, or deployment was
+performed.
+
+
+
+DEPARTMENT MANAGEMENT (2026-11-15)
+----------------------------------
+Implemented admin department management without changing the database schema.
+The existing GET /api/departments/ behavior remains active-only by default;
+ADMIN can explicitly request inactive departments. ADMIN-only POST /api/departments/
+creates a department and PATCH /api/departments/{id}/ updates it, including
+activation/deactivation. Writes validate required fields and reject duplicate
+names/codes using the standardized conflict response. Deactivation preserves
+existing employee and ticket foreign-key references.
+
+The active React app now has an ADMIN-only Department Management route, linked
+from the sidebar and command palette. It supports listing, inactive filtering,
+create, edit and activation changes using the shared authenticated API client.
+Department audit events were implemented on 2026-11-16; see the dedicated
+verification entry below.
+
+Verification: Django check passed; all 114 Django tests passed on a disposable
+SQLite test database; `makemigrations --check --dry-run departments` reported
+no changes. Frontend API tests passed (10/10), and Vite production build passed.
+A browser-driven follow-up was completed on 2026-11-16; see the focused verification entry below.
+The department-choice migration was applied only to an isolated staging
+copy; the configured database was not migrated or written. No commit or deployment
+was performed.
+
+
+DEPARTMENT MANAGEMENT BROWSER VERIFICATION (2026-11-16)
+------------------------------------------------------
+Verified in Edge using an isolated copy of the staging SQLite database. ADMIN
+opened the page, created and edited a department, received HTTP 409 and visible
+errors for duplicate name and code, viewed inactive departments, and
+deactivated/reactivated an existing department. While it was inactive, it was
+absent from ticket, workforce, and analytics department selectors; after
+reactivation, all three selectors included it and filtering worked.
+
+AGENT and EMPLOYEE were tested with disposable staging accounts: the UI hid the
+management route, direct navigation returned to Dashboard, and inactive-list,
+create, and update API requests returned 403 permission_denied. A staged
+department referenced by one ticket and one employee retained both references
+through deactivation/reactivation (read-only before/after count comparison).
+
+Browser diagnostics: no JavaScript page errors or failed network requests.
+Console resource errors corresponded to expected initial unauthenticated 401
+responses and deliberate 403 permission-denial checks. Department API responses
+were 201 create, 200 update/toggle, 409 duplicate conflicts, and 403 for denied
+roles. No application code was changed. The configured database and backups
+were not accessed or modified; staging servers were stopped after verification.
+
+
+DEPARTMENT AUDIT LOGGING (2026-11-16)
+-------------------------------------
+Added DEPARTMENT_CREATED, DEPARTMENT_UPDATED, DEPARTMENT_ACTIVATED and
+DEPARTMENT_DEACTIVATED events. Events are written in the same transaction as
+department create/update operations. Details include department ID, changed
+field names and activation state only; description contents are excluded. The
+existing ADMIN-only audit API remains unchanged. Settings now displays readable
+event labels and department details, with unit-tested formatting.
+
+Added auditlog.0002_department_event_type_choices.py as a state-only migration:
+no column/table changes or data backfill. It was applied to an isolated copy
+only; existing audit rows and schema version/columns remained unchanged.
+Verification: Django system check passed; full backend suite passed (119/119);
+frontend tests passed (12/12); Vite production build passed; makemigrations
+--check --dry-run reported no changes. The configured SQLite database was not
+modified; no dependencies, frontend design, or unrelated modules were changed.
+
+PERSISTENT IN-APP NOTIFICATIONS (2026-11-16)
+-------------------------------------------
+Added a persistent notifications app with recipient-scoped list, unread-count,
+mark-one-read and mark-all-read APIs. Assignment creation/reassignment, ticket
+status changes (including bulk status changes), and assignment acceptance or
+completion create notifications inside the corresponding business transaction.
+Notifications are deduplicated by unique event keys; actors are excluded and
+related ticket/assignment references use SET_NULL. No email, SMS, browser push,
+or WebSocket delivery was added.
+
+Added the authenticated header bell, unread badge, dropdown, timestamps,
+read-state controls, loading/empty/error states, using the shared API client.
+At the time of this original implementation entry, notifications.0001_initial
+had not yet been applied to the configured development database. The later
+release-readiness verification below records its subsequent application.
+
+Verification: focused notification tests 7/7 passed; full backend suite 126/126
+passed on a disposable SQLite database; Django check passed;
+makemigrations --check --dry-run reported no model drift. Frontend Node tests
+passed 14/14 and the Vite production build passed to an external staging folder.
+The configured SQLite database integrity check passed and was accessed read-only.
+
+
+RELEASE READINESS AUDIT (2026-11-16)
+-----------------------------------
+Migration verification against the configured SQLite database:
+- All migrations are applied, including auditlog.0002_department_event_type_choices
+  and notifications.0001_initial.
+- makemigrations --check --dry-run reported no model drift.
+- The configured database passed integrity_check with no foreign-key violations.
+
+Feature verification:
+- Ticket archive/restore is integrated in the active Tickets UI. ADMIN and AGENT
+  can archive; only ADMIN can list archived tickets and restore. ADMIN and AGENT
+  browser workflows passed in the isolated staging database; EMPLOYEE archive
+  controls were hidden and backend denials returned 403.
+- Department create/edit/activation, assignment workflows, analytics and CSV,
+  heuristic AI, audit logs, notifications, login/logout and role checks were
+  browser-verified on isolated staging data in recent runs.
+
+Release checks run for this audit:
+- Django system check passed; full backend suite passed (126/126).
+- Frontend Node tests passed (16/16); Vite production build passed.
+- The default frontend API base is http://localhost:8000/api; set
+  VITE_API_BASE_URL in the frontend build environment for deployment.
+- A unique post-migration backup was created outside the repository through
+  SQLite's online backup API. Its integrity and foreign-key checks passed and
+  critical table counts matched the configured database.
+
+Production readiness is NEEDS ATTENTION. `manage.py check --deploy` reports six
+warnings: DEBUG is enabled, ALLOWED_HOSTS is empty, HSTS and HTTPS redirect are
+unset, and secure session/CSRF cookie flags are false. STATIC_ROOT is unset.
+Configure these for the actual hosting environment, including CORS/CSRF origins
+and static-file serving, and rehearse restore on a separate database copy.
+SQLite also has limited concurrent-write behavior; choose a different database
+only after a tested migration plan if expected workload requires it.
+
+Dependency and repository preservation:
+- backend/requirements.txt now uses UTF-8 and retains the same 151 dependency
+  entries as the previously committed UTF-16 LE manifest; pip parsed all entries
+  without installing packages. backend/requirements_backup.txt remains an
+  excluded local duplicate in the old encoding and is not a release dependency
+  file.
+- Existing uncommitted SmartDesk changes were preserved. No files were staged,
+  committed or pushed. No app code or configured database records were changed
+  during this release-readiness review.

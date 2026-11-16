@@ -5,6 +5,8 @@ _TICKET_STATUSES = {"OPEN", "IN_PROGRESS", "RESOLVED", "CLOSED"}
 _PRIORITIES = {"LOW", "MEDIUM", "HIGH", "CRITICAL"}
 _ASSIGNMENT_STATUSES = {"ASSIGNED", "ACCEPTED", "COMPLETED", "REASSIGNED"}
 _GENERIC_TICKET_FIELDS = {"title", "description", "department_id"}
+_DEPARTMENT_FIELDS = {"name", "code", "description", "is_active"}
+_DEPARTMENT_UPDATE_FIELDS = _DEPARTMENT_FIELDS - {"is_active"}
 
 
 def _positive_id(value, field_name):
@@ -79,6 +81,39 @@ def _validate_details(event_type, details):
         expected = (False, True) if event_type == "TICKET_ARCHIVED" else (True, False)
         if (details["from"], details["to"]) != expected:
             raise ValueError("Ticket archive audit values are invalid.")
+    elif event_type == "DEPARTMENT_CREATED":
+        if set(details) != {"department_id", "changed_fields", "is_active"}:
+            raise ValueError("Department creation audit fields are invalid.")
+        _positive_id(details["department_id"], "department_id")
+        fields = details["changed_fields"]
+        if (
+            not isinstance(fields, list) or not fields
+            or any(not isinstance(field, str) for field in fields)
+            or len(fields) != len(set(fields)) or set(fields) - _DEPARTMENT_FIELDS
+        ):
+            raise ValueError("Department creation audit changed_fields are invalid.")
+        if not isinstance(details["is_active"], bool):
+            raise ValueError("Department activation state is invalid.")
+    elif event_type == "DEPARTMENT_UPDATED":
+        if set(details) != {"department_id", "changed_fields"}:
+            raise ValueError("Department update audit fields are invalid.")
+        _positive_id(details["department_id"], "department_id")
+        fields = details["changed_fields"]
+        if (
+            not isinstance(fields, list) or not fields
+            or any(not isinstance(field, str) for field in fields)
+            or len(fields) != len(set(fields)) or set(fields) - _DEPARTMENT_UPDATE_FIELDS
+        ):
+            raise ValueError("Department update audit changed_fields are invalid.")
+    elif event_type in {"DEPARTMENT_ACTIVATED", "DEPARTMENT_DEACTIVATED"}:
+        if set(details) != {"department_id", "from", "to"}:
+            raise ValueError("Department activation audit fields are invalid.")
+        _positive_id(details["department_id"], "department_id")
+        expected = (False, True) if event_type == "DEPARTMENT_ACTIVATED" else (True, False)
+        if not isinstance(details["from"], bool) or not isinstance(details["to"], bool):
+            raise ValueError("Department activation values must be booleans.")
+        if (details["from"], details["to"]) != expected:
+            raise ValueError("Department activation audit values are invalid.")
     else:
         raise ValueError("Unsupported audit event type.")
 
@@ -196,6 +231,44 @@ def record_ticket_restored(*, actor, ticket):
         ticket=ticket,
         details={"from": True, "to": False},
     )
+
+
+def record_department_created(*, actor, department, changed_fields):
+    return record_event(
+        actor=actor,
+        event_type="DEPARTMENT_CREATED",
+        details={
+            "department_id": department.pk,
+            "changed_fields": sorted(set(changed_fields) & _DEPARTMENT_FIELDS),
+            "is_active": department.is_active,
+        },
+    )
+
+
+def record_department_changes(*, actor, department, before):
+    changed_fields = [
+        field for field in ("name", "code", "description", "is_active")
+        if before[field] != getattr(department, field)
+    ]
+    if not changed_fields:
+        return []
+
+    events = []
+    ordinary_changes = [field for field in changed_fields if field != "is_active"]
+    if ordinary_changes:
+        events.append(record_event(
+            actor=actor,
+            event_type="DEPARTMENT_UPDATED",
+            details={"department_id": department.pk, "changed_fields": ordinary_changes},
+        ))
+    if "is_active" in changed_fields:
+        active = department.is_active
+        events.append(record_event(
+            actor=actor,
+            event_type="DEPARTMENT_ACTIVATED" if active else "DEPARTMENT_DEACTIVATED",
+            details={"department_id": department.pk, "from": before["is_active"], "to": active},
+        ))
+    return events
 
 
 def record_assignment_created(*, actor, assignment):

@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     'assignment',
     'ai_engine',
     'auditlog',
+      'notifications.apps.NotificationsConfig',
 ]
 
 MIDDLEWARE = [
